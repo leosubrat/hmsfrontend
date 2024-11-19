@@ -1,0 +1,45 @@
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.125rem;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.btn-primary:disabled {
+  background-color: #c6c6c6;
+  border-color: #c6c6c6;
+}

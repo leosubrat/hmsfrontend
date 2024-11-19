@@ -1,0 +1,75 @@
+/* header.component.css */
+
+.custom-navbar {
+  background-color: #333;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand img {
+  border-radius: 50%;
+}
+
+.company-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Navbar links styling */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.nav-link {
+  color: #f8f9fa;
+  font-weight: 500;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.nav-link:hover {
+  color: #ffc107;
+}
+
+/* Special button styles for Login and Register */
+.login-btn {
+  color: #fff;
+  border: 1px solid #007bff;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.register-btn {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.register-btn:hover {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .navbar-nav {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .nav-link {
+    padding: 0.75rem;
+  }
+}
