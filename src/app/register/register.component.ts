@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import {FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {NgClass, NgIf} from '@angular/common';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -8,57 +9,25 @@ import {NgClass} from '@angular/common';
   styleUrls: ['./register.component.css'],
   imports: [
     ReactiveFormsModule,
-    NgClass
+    NgClass,
+    NgIf,
+    FormsModule
   ],
   standalone: true
 })
-export class RegisterComponent implements OnInit {
-  registerForm: FormGroup | undefined;
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    // Initialize the form group with validation
-    this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+export class RegisterComponent {
+  user = { firstName: '', lastName: '',email:"",password:""};
+  constructor(private appService: AuthService) {
+    console.log("heyyyy")
   }
-
-//   // Getter methods to easily access form controls in the template
-//   get firstName() {
-//     return this.registerForm.get('firstName');
-//   }
-//
-//   get lastName() {
-//     return this.registerForm.get('lastName');
-//   }
-//
-//   get email() {
-//     return this.registerForm.get('email');
-//   }
-//
-//   get password() {
-//     return this.registerForm.get('password');
-//   }
-//
-//   // Handle form submission
   onSubmit(): void {
-    // @ts-ignore
-    if (this.registerForm.valid) {
-      // @ts-ignore
-      const formData = this.registerForm.value;
-      console.log('Form Submitted', formData);
-      // Call the backend API to save the data
-      // this.authService.register(formData).subscribe(response => { ... });
-    } else {
-      console.log('Form is invalid');
-    }
+    this.appService.registerUser(this.user).subscribe(
+      (response) => {
+        console.log('Student data submitted successfully:', response);
+      },
+      (error) => {
+        console.error('Error while submitting student data:', error);
+      }
+    );
   }
-  password: any;
-  email: any;
-  lastName: any;
-  firstName: any;
 }
