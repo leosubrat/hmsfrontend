@@ -1,0 +1,87 @@
+/* Main container styling */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #6cc1d9, #56d6b4);
+  }
+  
+  .login-box {
+    background-color: white;
+    padding: 30px;
+    width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform-style: preserve-3d;
+    transform: perspective(1500px);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .login-box h2 {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* 3D input fields */
+  .input-group {
+    margin-bottom: 20px;
+  }
+  
+  .input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  /* 3D effect on inputs */
+  .input-group input:focus {
+    outline: none;
+    border-color: #3b9b9b;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  /* Login button with 3D effect */
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #56d6b4;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .login-btn:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+  
+  /* 3D effect when the login box is hovered */
+  .login-box:hover {
+    transform: rotateY(10deg) rotateX(10deg);
+  }
+  
