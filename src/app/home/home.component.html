@@ -1,1 +1,45 @@
-<p>home works!</p>
+<div class="container">
+    <header class="header">
+      <div class="logo">
+        <h1>Hospital Management System</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Patients</a></li>
+          <li><a href="#">Appointments</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main>
+      <section class="welcome-section">
+        <h2>Welcome to the Hospital Management System</h2>
+        <p>Your trusted healthcare management tool.</p>
+      </section>
+  
+      <section class="statistics">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-content">
+            <h3>{{ stat.title }}</h3>
+            <p>{{ stat.value }}</p>
+          </div>
+        </div>
+      </section>
+  
+      <section class="quick-access">
+        <div class="card" *ngFor="let link of quickLinks">
+          <div class="card-content">
+            <h4>{{ link.title }}</h4>
+            <button (click)="navigateTo(link.route)">Go</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <!-- <p>Contact us: info@hospital.com</p> -->
+    </footer>
+  </div>
+  
