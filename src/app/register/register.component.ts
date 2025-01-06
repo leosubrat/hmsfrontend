@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -8,7 +8,7 @@ import {NgClass} from '@angular/common';
   styleUrls: ['./register.component.css'],
   imports: [
     ReactiveFormsModule,
-    NgClass
+    NgClass,NgIf
   ],
   standalone: true
 })
