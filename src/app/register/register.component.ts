@@ -1,64 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
-import {NgClass, NgIf} from '@angular/common';
+import { Component } from '@angular/core';
+import { RegisterDTO } from '../shared/model/register.dto';
+import { RegisterserviceService } from './registerservice.service';
+import { FormsModule } from '@angular/forms';
+import { provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
-  imports: [
-    ReactiveFormsModule,
-    NgClass,NgIf
-  ],
-  standalone: true
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  registerForm: FormGroup | undefined;
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    // Initialize the form group with validation
-    this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+export class RegisterComponent {
+  constructor( private registerService: RegisterserviceService) {}
+  registerForm: RegisterDTO = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  };
+  onRegister(): void {
+    this.registerService.onRegister(this.registerForm).subscribe({
+      next: (response) => {
+   
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      },
+      complete: () => {
+      },
     });
   }
-
-//   // Getter methods to easily access form controls in the template
-//   get firstName() {
-//     return this.registerForm.get('firstName');
-//   }
-//
-//   get lastName() {
-//     return this.registerForm.get('lastName');
-//   }
-//
-//   get email() {
-//     return this.registerForm.get('email');
-//   }
-//
-//   get password() {
-//     return this.registerForm.get('password');
-//   }
-//
-//   // Handle form submission
-  onSubmit(): void {
-    // @ts-ignore
-    if (this.registerForm.valid) {
-      // @ts-ignore
-      const formData = this.registerForm.value;
-      console.log('Form Submitted', formData);
-      // Call the backend API to save the data
-      // this.authService.register(formData).subscribe(response => { ... });
-    } else {
-      console.log('Form is invalid');
-    }
-  }
-  password: any;
-  email: any;
-  lastName: any;
-  firstName: any;
 }

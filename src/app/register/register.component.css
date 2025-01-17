@@ -1,34 +1,78 @@
-body {
-  background: linear-gradient(135deg, #43cea2, #185a9d);
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-}
-
-.card {
-  border: none;
-  background-color: white;
-}
-
-.card-header h4 {
-  font-size: 1.4rem;
-}
-
-.btn-success {
-  border-radius: 8px;
-  background: linear-gradient(135deg, #43cea2, #185a9d);
-  border: none;
-}
-
-.btn-success:hover {
-  background: linear-gradient(135deg, #185a9d, #43cea2);
-}
-
-.form-control {
-  border-radius: 6px;
-}
-
-@media (max-width: 576px) {
-  .card {
-    width: 90%; /* Adjust width for smaller devices */
+.register-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
   }
-}
+  
+  .card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 350px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #4d4d4d;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #7bbfdb;
+    box-shadow: 0 0 5px rgba(123, 191, 219, 0.5);
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff7e5f;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #feb47b;
+  }
+  
+  button:active {
+    background-color: #ff6f61;
+  }
+  
+  input, button {
+    font-family: 'Arial', sans-serif;
+  }
+  

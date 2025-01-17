@@ -1,49 +1,18 @@
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-  <div class="card shadow-lg" style="width: 22rem; border-radius: 12px;">
-    <div class="card-header text-center bg-success text-white" style="border-radius: 12px 12px 0 0;">
-      <h4>Create an Account</h4>
-      <p class="mb-0">Sign up to get started</p>
-    </div>
-    <div class="card-body">
-      <form>
-        <!-- First Name -->
-        <div class="mb-2">
-          <label for="firstName" class="form-label">First Name</label>
-          <input type="text" class="form-control" id="firstName" placeholder="First name" required>
-        </div>
-        <!-- Last Name -->
-        <div class="mb-2">
-          <label for="lastName" class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="lastName" placeholder="Last name" required>
-        </div>
-        <!-- Email -->
-        <div class="mb-2">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Email address" required>
-        </div>
-        <!-- Password -->
-        <div class="mb-2">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password" required>
-        </div>
-        <!-- Confirm Password -->
-        <div class="mb-2">
-          <label for="confirmPassword" class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" required>
-        </div>
-        <!-- Terms and Conditions -->
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="checkbox" id="terms" required>
-          <label class="form-check-label" for="terms">
-            I agree to the <a href="#" class="text-decoration-none text-primary">terms and conditions</a>.
-          </label>
-        </div>
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-success w-100">Register</button>
-      </form>
-    </div>
-    <div class="card-footer text-center">
-      <small>Already have an account? <a href="#" class="text-success text-decoration-none">Login</a></small>
-    </div>
+<form (ngSubmit)="onRegister()" class="register-form">
+  <div class="card">
+    <h2>Register</h2>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" [(ngModel)]="registerForm.firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" [(ngModel)]="registerForm.lastName" name="lastName" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="registerForm.email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" [(ngModel)]="registerForm.password" name="password" required>
+
+    <button type="submit">Register</button>
   </div>
-</div>
+</form>
