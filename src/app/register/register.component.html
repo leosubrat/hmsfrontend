@@ -1,20 +1,88 @@
-<form (ngSubmit)="onRegister()" class="register-form">
+<form (ngSubmit)="onRegister()" #registerForm="ngForm" class="register-form">
   <div class="card">
     <h2>Register</h2>
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" [(ngModel)]="registerForm.firstName" name="firstName" required>
+    <div>
+      <label for="firstName">First Name:</label>
+      <input
+        type="text"
+        id="firstName"
+        [(ngModel)]="registerFormModel.firstName"
+        name="firstName"
+        required
+        #firstName="ngModel"
+      />
+      <div *ngIf="firstName.invalid && firstName.touched" class="error">
+        First Name is required.
+      </div>
+    </div>
+    <div>
+      <label for="lastName">Last Name:</label>
+      <input
+        type="text"
+        id="lastName"
+        [(ngModel)]="registerFormModel.lastName"
+        name="lastName"
+        required
+        #lastName="ngModel"
+      />
+      <div *ngIf="lastName.invalid && lastName.touched" class="error">
+        Last Name is required.
+      </div>
+    </div>
 
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" [(ngModel)]="registerForm.lastName" name="lastName" required>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" [(ngModel)]="registerForm.email" name="email" required>
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" [(ngModel)]="registerForm.password" name="password" required>
-
-    <button type="submit">Register</button>
+    <!-- Email -->
+    <div>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="registerFormModel.email"
+        name="email"
+        required
+        email
+        #email="ngModel"
+      />
+      <div *ngIf="email.invalid && email.touched" class="error">
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?.['email']">Invalid email format.</div>
+      </div>
+    </div>
+<!-- Password -->
+<div>
+  <label for="password">Password:</label>
+  <div class="password-wrapper">
+    <input
+      [type]="passwordVisible ? 'text' : 'password'"
+      id="password"
+      [(ngModel)]="registerFormModel.password"
+      name="password"
+      required
+      minlength="6"
+      maxlength="20"
+      pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
+      #password="ngModel"
+    />
+    <i
+      class="fa"
+      [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
+      (click)="togglePasswordVisibility()"
+      aria-hidden="true"
+    ></i>
+  </div>
+  <div *ngIf="password.invalid && password.touched" class="error">
+    <div *ngIf="password.errors?.['required']">Password is required.</div>
+    <div *ngIf="password.errors?.['minlength']">
+      Password must be at least 6 characters long.
+    </div>
+    <div *ngIf="password.errors?.['maxlength']">
+      Password must be at most 20 characters long.
+    </div>
+    <div *ngIf="password.errors?.['pattern']">
+      Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.
+    </div>
+  </div>
+</div>
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
   </div>
 </form>
 <p-toast></p-toast>
-
