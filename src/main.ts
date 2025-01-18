@@ -3,10 +3,14 @@ import { AppComponent } from './app/app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
+import { MessageService } from 'primeng/api';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(), // Provide HttpClient globally
-    provideRouter(routes), // Provide routing if you're using it
+    provideHttpClient(), 
+    provideRouter(routes),
+    provideAnimations(),
+    MessageService
   ],
 }).catch((err) => console.error(err));
