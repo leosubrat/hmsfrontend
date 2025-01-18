@@ -1,0 +1,33 @@
+.form-control {
+    width: 100%;
+  }
+  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  input.ng-invalid.ng-touched {
+    border-color: red;
+  }
+  
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .password-wrapper i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  

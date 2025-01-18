@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RegisterDTO } from '../shared/model/register.dto';
-import { RegisterserviceService } from './registerservice.service';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
+import { RegisterService } from './register.service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterComponent {
   passwordVisible: boolean = false;
-  constructor( private registerService: RegisterserviceService,private messageService:MessageService) {}
+  constructor( private registerService: RegisterService,private messageService:MessageService) {}
   registerFormModel: RegisterDTO = {
     firstName: '',
     lastName: '',
