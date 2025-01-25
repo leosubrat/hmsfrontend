@@ -81,6 +81,26 @@
       Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.
     </div>
   </div>
+
+   <!-- Role Dropdown -->
+   <div>
+    <label for="role">Role:</label>
+    <select
+      id="role"
+      [(ngModel)]="registerFormModel.role"
+      name="role"
+      required
+      #role="ngModel"
+    >
+      <option value="" disabled>Select your role</option>
+      <option value="DOCTOR">Doctor</option>
+      <option value="PATIENT">Patient</option>
+    </select>
+    <div *ngIf="role.invalid && role.touched" class="error">
+      Role is required.
+    </div>
+  </div>
+  
 </div>
     <button type="submit" [disabled]="registerForm.invalid">Register</button>
   </div>

@@ -4,4 +4,5 @@ export interface RegisterDTO{
     email:string;
     password:string;
     message:string;
+    role:string;
 }

@@ -11,7 +11,8 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  {path:'logindash',component:UserlogindashboardComponent},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {path:'user/dashboard',component:UserlogindashboardComponent},
   {path:'schedule-form',component:ScheduleAppointmentComponent}
 ]
 

@@ -22,6 +22,7 @@ export class RegisterComponent {
     email: '',
     password: '',
     message:'',
+    role:''
   };
   onRegister(): void {
     this.registerService.onRegister(this.registerFormModel).subscribe({

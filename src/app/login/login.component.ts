@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent{
   passwordVisible: boolean = false;
-  constructor( private registerService: LoginService,private messageService:MessageService) {}
+  constructor( private registerService: LoginService,private messageService:MessageService,private router:Router) {}
   loginFormModel: LoginDTO = {
     email: '',
     password: '',
@@ -26,6 +27,7 @@ export class LoginComponent{
       next: (response) => {
         const message = response?.message;
         this.showSuccess(message);
+        this.router.navigate(['/user/dashboard']);
       },
       error: (error) => {
         const errorMessage =

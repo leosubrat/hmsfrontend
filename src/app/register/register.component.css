@@ -107,3 +107,24 @@ input.ng-invalid.ng-touched {
   color: #666;
 }
 
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  font-family: 'Arial', sans-serif;
+}
+
+select:focus {
+  border-color: #7bbfdb;
+  box-shadow: 0 0 5px rgba(123, 191, 219, 0.5);
+}
+
+select.ng-invalid.ng-touched {
+  border-color: red;
+}
