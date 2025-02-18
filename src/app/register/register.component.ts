@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { RegisterService } from './register.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,18 +16,21 @@ import { RegisterService } from './register.service';
 })
 export class RegisterComponent {
   passwordVisible: boolean = false;
-  constructor( private registerService: RegisterService,private messageService:MessageService) {}
+  constructor( private registerService: RegisterService,private messageService:MessageService,private router:Router) {}
   registerFormModel: RegisterDTO = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     message:'',
-    role:''
+    role:'',
+    token:''
   };
   onRegister(): void {
     this.registerService.onRegister(this.registerFormModel).subscribe({
       next: (response) => {
+      localStorage.setItem('accessToken', response?.token || 'loggedIn');
+      this.router.navigate(['/user/dashboard']);
         const message = response?.message;
         this.showSuccess(message);
       },

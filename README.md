@@ -29,3 +29,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## install primeng and toast
 
 ## npm install font-awesome
+
+## ng generate guard auth--to create an auth guard
+
+
+## CanActivateFn in Angular
+    The CanActivateFn is a function used to implement logic that determines if a route can be activated (navigated to) or not.
+    

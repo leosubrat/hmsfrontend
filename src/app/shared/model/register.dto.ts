@@ -5,4 +5,5 @@ export interface RegisterDTO{
     password:string;
     message:string;
     role:string;
+    token:string;
 }

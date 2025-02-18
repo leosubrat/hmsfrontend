@@ -6,13 +6,17 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { UserlogindashboardComponent } from './userlogindashboard/userlogindashboard.component';
 import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-appointment.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  {path:'user/dashboard',component:UserlogindashboardComponent},
+  {
+    path: 'user/dashboard',
+    component: UserlogindashboardComponent,
+    canActivate: [authGuard]
+  },  
   {path:'schedule-form',component:ScheduleAppointmentComponent}
 ]
 
