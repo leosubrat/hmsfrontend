@@ -36,3 +36,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## CanActivateFn in Angular
     The CanActivateFn is a function used to implement logic that determines if a route can be activated (navigated to) or not.
     
+npm install @popperjs/core --legacy-peer-deps
+npm install @ng-bootstrap/ng-bootstrap@14 --legacy-peer-deps
+

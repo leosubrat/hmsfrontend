@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,12 @@ export class LoginComponent{
     message:'',
     accessToken:''
   };
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
+  setLoggedInStatus(status: boolean): void {
+    this.isLoggedInSubject.next(status);
+  }
   onLogin(): void {
     this.loginService.onLogin(this.loginFormModel).subscribe({
       next: (response) => {

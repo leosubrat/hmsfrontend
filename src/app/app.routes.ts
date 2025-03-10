@@ -7,11 +7,13 @@ import { RegisterComponent } from './register/register.component';
 import { UserlogindashboardComponent } from './userlogindashboard/userlogindashboard.component';
 import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-appointment.component';
 import { authGuard } from './auth.guard';
+import { NavbarComponent } from './navbar/navbar.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  {path:'nav',component:NavbarComponent},
   {
     path: 'user/dashboard',
     component: UserlogindashboardComponent,
