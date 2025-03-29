@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { LoginService } from '../login/login.service';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     @ViewChild('logoutModal') logoutModal!: TemplateRef<any>;
     isLogOut:boolean=true;
 
-  constructor(private loginService: LoginService,private modalService: NgbModal,private router:Router) {}
+  constructor(private loginService: LoginService,private modalService: NgbModal,private router:Router,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loginService.isLoggedIn$.subscribe((status) => {
@@ -35,10 +35,9 @@ import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 
   onLogout(modal: any): void {
-    localStorage.removeItem('accessToken');
-    this.router.navigate(['']);
-    modal.close();
-    this.isLogOut=false;
-
+    modal.dismiss();
+    localStorage.removeItem('authToken');
+    this.isLoggedIn = false;
+    this.cdr.detectChanges();
   }
   }
