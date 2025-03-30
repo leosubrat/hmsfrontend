@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
+import { DoctorsComponent } from './components/doctor/doctor.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'auth/signup/:role',
     component: SignupComponent
+  },
+  {
+    path: 'doctors',
+    component: DoctorsComponent
   },
   {
     path: '**',

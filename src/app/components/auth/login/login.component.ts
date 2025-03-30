@@ -1,14 +1,22 @@
 // src/app/components/auth/login/login.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { AuthService, SigninRequest } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, HttpClientModule, ToastModule],
+  providers: [MessageService],
   template: `
+    <!-- PrimeNG Toast component -->
+    <p-toast></p-toast>
+    
     <div class="login-container">
       <div class="login-panel">
         <div class="login-left">
@@ -61,12 +69,12 @@ import { FormsModule } from '@angular/forms';
           <h2>{{ getRoleTitle() }} Log In</h2>
           
           <div class="form-group">
-            <label for="email">Phone/Email Address</label>
+            <label for="email">Email Address</label>
             <div class="input-container">
               <input 
                 type="text" 
                 id="email" 
-                placeholder="Phone/Email" 
+                placeholder="Email" 
                 [(ngModel)]="credentials.email"
               >
               <span class="input-icon">
@@ -83,7 +91,7 @@ import { FormsModule } from '@angular/forms';
               <input 
                 [type]="showPassword ? 'text' : 'password'" 
                 id="password" 
-                placeholder="password" 
+                placeholder="Password" 
                 [(ngModel)]="credentials.password"
               >
               <span 
@@ -108,8 +116,18 @@ import { FormsModule } from '@angular/forms';
             <a routerLink="/auth/forgot-password" class="forgot-link">Forgot Password?</a>
           </div>
           
-          <button class="login-button" (click)="login()">
-            Log In
+          <button 
+            class="login-button" 
+            [disabled]="!isFormValid() || isLoading" 
+            (click)="login()"
+          >
+            <span *ngIf="isLoading">
+              <svg class="spinner" viewBox="0 0 50 50">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+              </svg>
+              Logging in...
+            </span>
+            <span *ngIf="!isLoading">Log In</span>
           </button>
           
           <!-- Create Account Section - Only show for User and Doctor roles -->
@@ -129,7 +147,9 @@ import { FormsModule } from '@angular/forms';
       </div>
     </div>
   `,
-  styles: [`
+  styles: [
+    // Same styles as before
+    `
     .login-container {
       display: flex;
       justify-content: center;
@@ -299,10 +319,54 @@ import { FormsModule } from '@angular/forms';
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
     
     .login-button:hover {
       background-color: #00897b;
+    }
+    
+    .login-button:disabled {
+      background-color: #b0bec5;
+      cursor: not-allowed;
+    }
+    
+    /* Loading spinner */
+    .spinner {
+      animation: rotate 2s linear infinite;
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .spinner .path {
+      stroke: #ffffff;
+      stroke-linecap: round;
+      animation: dash 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+      }
+      100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+      }
     }
     
     /* Create Account Section Styles */
@@ -380,18 +444,32 @@ import { FormsModule } from '@angular/forms';
         margin-right: 0;
         margin-bottom: 10px;
       }
+      
+      .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
     }
-  `]
+    `
+  ]
 })
 export class LoginComponent {
   selectedRole: string = 'user';
   showPassword: boolean = false;
   rememberMe: boolean = false;
+  isLoading: boolean = false;
   
-  credentials = {
+  credentials: SigninRequest = {
     email: '',
     password: ''
   };
+  
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
   
   selectRole(role: string): void {
     this.selectedRole = role;
@@ -401,9 +479,76 @@ export class LoginComponent {
     return this.selectedRole.charAt(0).toUpperCase() + this.selectedRole.slice(1);
   }
   
+  isFormValid(): string {
+    return this.credentials.email && this.credentials.password;
+  }
+  
   login(): void {
-    console.log('Logging in as', this.selectedRole);
-    console.log('Credentials:', this.credentials);
-    // Add actual login logic here
+    if (!this.isFormValid()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Form Validation',
+        detail: 'Please enter your email and password'
+      });
+      return;
+    }
+    
+    this.isLoading = true;
+    
+    this.authService.signin(this.credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.isLoading = false;
+        
+        // Show success toast
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Login Successful',
+          detail: response.message || 'Welcome back!'
+        });
+        
+        // Redirect based on role - this would need to be determined from the token
+        // For now, we'll just redirect to the home page
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 1000);
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        this.isLoading = false;
+        
+        if (error.status === 401 || 
+            (error.error && error.error.message && 
+             error.error.message.toLowerCase().includes('invalid'))) {
+          // Invalid credentials
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Login Failed',
+            detail: 'Invalid email or password'
+          });
+        } else if (error.error && error.error.message) {
+          // Server sent specific error message
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Login Failed',
+            detail: error.error.message
+          });
+        } else if (error.status === 0) {
+          // Server is likely down
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Connection Error',
+            detail: 'Server is unreachable. Please check your internet connection.'
+          });
+        } else {
+          // Generic error
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Login Failed',
+            detail: 'An unexpected error occurred. Please try again later.'
+          });
+        }
+      }
+    });
   }
 }

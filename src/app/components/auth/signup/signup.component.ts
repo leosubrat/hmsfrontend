@@ -3,12 +3,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, HttpClientModule, ToastModule],
+  providers: [MessageService], // Add MessageService to the component providers
   template: `
+    <!-- PrimeNG Toast component -->
+    <p-toast></p-toast>
+    
     <div class="signup-container">
       <div class="signup-card">
         <h2>Create {{ roleTitle }} Account</h2>
@@ -33,14 +41,33 @@ import { FormsModule } from '@angular/forms';
           </div>
         </div>
         
+        <!-- First Name Field -->
         <div class="form-group">
-          <label for="fullname">Full Name</label>
+          <label for="firstName">First Name</label>
           <div class="input-container">
             <input 
               type="text" 
-              id="fullname" 
-              placeholder="Enter your full name" 
-              [(ngModel)]="signupData.fullName"
+              id="firstName" 
+              placeholder="Enter your first name" 
+              [(ngModel)]="signupData.firstName"
+            >
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="#1e88e5">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        
+        <!-- Last Name Field -->
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <div class="input-container">
+            <input 
+              type="text" 
+              id="lastName" 
+              placeholder="Enter your last name" 
+              [(ngModel)]="signupData.lastName"
             >
             <span class="input-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="#1e88e5">
@@ -178,7 +205,7 @@ import { FormsModule } from '@angular/forms';
               [type]="showConfirmPassword ? 'text' : 'password'" 
               id="confirmPassword" 
               placeholder="Confirm your password" 
-              [(ngModel)]="signupData.confirmPassword"
+              [(ngModel)]="confirmPassword"
             >
             <span 
               class="input-icon clickable" 
@@ -192,7 +219,7 @@ import { FormsModule } from '@angular/forms';
               </svg>
             </span>
           </div>
-          <div class="password-match" *ngIf="signupData.password && signupData.confirmPassword">
+          <div class="password-match" *ngIf="signupData.password && confirmPassword">
             <span class="match-indicator" [ngClass]="{ 'match': passwordsMatch(), 'no-match': !passwordsMatch() }">
               {{ passwordsMatch() ? '✓ Passwords match' : '✗ Passwords do not match' }}
             </span>
@@ -210,10 +237,16 @@ import { FormsModule } from '@angular/forms';
         
         <button 
           class="signup-button" 
-          [disabled]="!termsAccepted || !isFormValid()" 
+          [disabled]="!termsAccepted || !isFormValid() || isLoading" 
           (click)="signup()"
         >
-          Create Account
+          <span *ngIf="isLoading">
+            <svg class="spinner" viewBox="0 0 50 50">
+              <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+            Creating Account...
+          </span>
+          <span *ngIf="!isLoading">Create Account</span>
         </button>
         
         <div class="login-link">
@@ -222,7 +255,9 @@ import { FormsModule } from '@angular/forms';
       </div>
     </div>
   `,
-  styles: [`
+  styles: [
+    // Previous styles remain
+    `
     .signup-container {
       display: flex;
       justify-content: center;
@@ -349,6 +384,10 @@ import { FormsModule } from '@angular/forms';
       cursor: pointer;
       transition: background-color 0.3s ease;
       margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
     
     .signup-button:hover:not(:disabled) {
@@ -412,12 +451,48 @@ import { FormsModule } from '@angular/forms';
       color: #f44336;
     }
     
+    /* Loading spinner */
+    .spinner {
+      animation: rotate 2s linear infinite;
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .spinner .path {
+      stroke: #ffffff;
+      stroke-linecap: round;
+      animation: dash 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @keyframes dash {
+      0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+      }
+      100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+      }
+    }
+    
     @media (max-width: 768px) {
       .signup-card {
         padding: 30px 20px;
       }
     }
-  `]
+    `
+  ]
 })
 export class SignupComponent implements OnInit {
   roleType: string = 'user';
@@ -425,31 +500,40 @@ export class SignupComponent implements OnInit {
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
   termsAccepted: boolean = false;
+  isLoading: boolean = false;
+  confirmPassword: string = '';
   
-  signupData:any = {
-    fullName: '',
+  signupData: any = {
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     password: '',
-    confirmPassword: '',
-    specialization: '',
-    licenseNumber: '',
-    yearsOfExperience: null
+    role: 'USER'
   };
   
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
   
   ngOnInit(): void {
+    // Get the role from the route parameters
     this.route.params.subscribe(params => {
       if (params['role']) {
         this.roleType = params['role'].toLowerCase();
         this.roleTitle = this.roleType.charAt(0).toUpperCase() + this.roleType.slice(1);
+        
+        // Set the role value for the API request (uppercase as required by backend)
+        this.signupData.role = this.roleType.toUpperCase();
       }
     });
   }
   
   passwordsMatch(): boolean {
-    return this.signupData.password === this.signupData.confirmPassword;
+    return this.signupData.password === this.confirmPassword;
   }
   
   getPasswordStrength(): number {
@@ -486,8 +570,7 @@ export class SignupComponent implements OnInit {
   }
   
   isFormValid(): boolean {
-    // Check if required fields are filled
-    const requiredFields = ['fullName', 'email', 'phone', 'password', 'confirmPassword'];
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'password'];
     
     if (this.roleType === 'doctor') {
       requiredFields.push('specialization', 'licenseNumber', 'yearsOfExperience');
@@ -498,10 +581,8 @@ export class SignupComponent implements OnInit {
       return value === '' || value === null || value === undefined;
     });
     
-    // Check if password meets minimum requirements (basic check)
     const passwordStrong = this.getPasswordStrength() >= 1;
     
-    // Check if passwords match
     const passwordsMatch = this.passwordsMatch();
     
     return !hasEmptyFields && passwordStrong && passwordsMatch;
@@ -509,25 +590,70 @@ export class SignupComponent implements OnInit {
   
   signup(): void {
     if (!this.isFormValid()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Form Validation',
+        detail: 'Please fill in all required fields correctly'
+      });
       return;
     }
     
-    console.log(`Signing up as ${this.roleType}:`, this.signupData);
+    this.isLoading = true;
     
-    // Simulate successful signup
-    alert(`${this.roleTitle} account created successfully!`);
-    this.router.navigate(['/auth/login']);
-    
-    // In a real application, you would call a service to handle the signup process
-    // this.authService.signup(this.roleType, this.signupData).subscribe(
-    //   response => {
-    //     // Handle successful signup
-    //     this.router.navigate(['/auth/login']);
-    //   },
-    //   error => {
-    //     // Handle signup error
-    //     console.error('Signup error:', error);
-    //   }
-    // );
+    this.authService.signup(this.signupData).subscribe({
+      next: (response) => {
+        console.log('Signup successful:', response);
+        this.isLoading = false;
+        
+        // Show success toast with PrimeNG
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Registration Complete',
+          detail: response.message || 'Account created successfully!'
+        });
+        
+        // Wait a bit for the toast to be seen before redirecting
+        setTimeout(() => {
+          this.router.navigate(['/auth/login']);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('Signup error:', error);
+        this.isLoading = false;
+        
+        // Handle different error scenarios with appropriate toast messages
+        if (error.status === 409 || 
+            (error.error && error.error.message && 
+             error.error.message.includes('already'))) {
+          // Email already exists error
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Registration Failed',
+            detail: 'This email is already registered'
+          });
+        } else if (error.error && error.error.message) {
+          // Server sent specific error message
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Registration Failed',
+            detail: error.error.message
+          });
+        } else if (error.status === 0) {
+          // Server is likely down or network issue
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Connection Error',
+            detail: 'Server is unreachable. Please check your internet connection.'
+          });
+        } else {
+          // Generic error
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Registration Failed',
+            detail: 'An unexpected error occurred. Please try again later.'
+          });
+        }
+      }
+    });
   }
 }
