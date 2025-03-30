@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DoctorService } from '../../services/doctor/doctor.service';
 import { DoctorDto } from '../../models/doctor.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-doctors',
@@ -34,8 +35,8 @@ import { DoctorDto } from '../../models/doctor.model';
               <h3>Dr. {{ doctor.firstName }} {{ doctor.lastName }}</h3>
               <p class="specialization">{{ doctor.expertise }}</p>
               <p class="experience">{{ doctor.experience }} years of experience</p>
-              <button class="book-btn">Book Appointment</button>
-            </div>
+              <button class="book-btn" (click)="navigateToLogin()">Book Appointment</button>
+              </div>
           </div>
         </div>
       </div>
@@ -182,7 +183,8 @@ export class DoctorsComponent implements OnInit {
   doctors: DoctorDto[] = [];
   loading: boolean = true;
 
-  constructor(private doctorService: DoctorService) {}
+  constructor(private doctorService: DoctorService,  private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadDoctors();
@@ -204,5 +206,8 @@ export class DoctorsComponent implements OnInit {
 
   getInitials(firstName: string, lastName: string): string {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+  }
+  navigateToLogin(): void {
+    this.router.navigate(['/auth/login']);
   }
 }
