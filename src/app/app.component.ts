@@ -1,22 +1,37 @@
+// src/app/app.component.ts
 import { Component } from '@angular/core';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { FormsModule, NgModel } from '@angular/forms';
-import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { NavbarComponent } from './navbar/navbar.component';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { provideHttpClient } from '@angular/common/http';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule,NavbarComponent,LoginComponent], 
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent],
+  template: `
+    <div class="app-container">
+      <app-navbar></app-navbar>
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+      <app-footer></app-footer>
+    </div>
+  `,
+  styles: [`
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #f5f8fa;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'Hospitalityhub';
+  title = 'HospitalityHub';
 }
