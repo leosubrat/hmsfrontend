@@ -462,7 +462,7 @@ export class LoginComponent {
   
   credentials: SigninRequest = {
     email: '',
-    password: ''
+    password: '',
   };
   
   constructor(
@@ -499,18 +499,20 @@ export class LoginComponent {
       next: (response) => {
         console.log('Login successful:', response);
         this.isLoading = false;
-        
-        // Show success toast
         this.messageService.add({
           severity: 'success',
           summary: 'Login Successful',
           detail: response.message || 'Welcome back!'
         });
         
-        // Redirect based on role - this would need to be determined from the token
-        // For now, we'll just redirect to the home page
         setTimeout(() => {
-          this.router.navigate(['/']);
+          if (this.authService.isDoctor()) {
+            console.log('Redirecting to doctor dashboard');
+            this.router.navigate(['/doctor/dashboard']);
+          } else {
+            console.log('Redirecting to home');
+            this.router.navigate(['/']);
+          }
         }, 1000);
       },
       error: (error) => {

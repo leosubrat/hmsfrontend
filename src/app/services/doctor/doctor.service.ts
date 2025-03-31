@@ -1,7 +1,7 @@
 // src/app/services/doctor.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { environments } from '../../../environments/environment';
 import { DoctorDto } from '../../models/doctor.model';
 
@@ -18,7 +18,17 @@ import { DoctorDto } from '../../models/doctor.model';
 //     phone: string;
 //   };
 // }
+export interface TimeSlot {
+  day: string;
+  startTime: string;
+  endTime: string;
+}
 
+export interface DoctorProfileUpdate {
+  doctorId: number;
+  doctorDescription: string;
+  timeSlots: TimeSlot[];
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -29,5 +39,15 @@ export class DoctorService {
   
   getAllDoctors(): Observable<DoctorDto[]> {
     return this.http.get<DoctorDto[]>(`${this.baseUrl}/doctor/list`);
+  }
+
+  updateDoctorProfile(doctorDto: DoctorDto): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/doctor/update`, doctorDto)
+      .pipe(
+        catchError(error => {
+          console.error('Error updating doctor profile', error);
+          return of({ success: false, message: 'Error updating information' });
+        })
+      );
   }
 }

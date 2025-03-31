@@ -11,7 +11,6 @@ export interface User {
     middleName: string | null;
     lastName: string;
     experience: number;
-    age: number;
-    expertise: string;
-    salary: number | null;
+    expertise:string,
+    description:string|null
   }

@@ -4,6 +4,8 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { DoctorsComponent } from './components/doctor/doctor.component';
+import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard/doctor.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -45,6 +47,11 @@ export const routes: Routes = [
   {
     path: 'doctors',
     component: DoctorsComponent
+  },
+  {
+    path: 'doctor/dashboard',
+    component: DoctorDashboardComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',

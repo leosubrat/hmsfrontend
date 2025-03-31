@@ -612,7 +612,6 @@ export class SignupComponent implements OnInit {
           detail: response.message || 'Account created successfully!'
         });
         
-        // Wait a bit for the toast to be seen before redirecting
         setTimeout(() => {
           this.router.navigate(['/auth/login']);
         }, 1500);
@@ -621,7 +620,6 @@ export class SignupComponent implements OnInit {
         console.error('Signup error:', error);
         this.isLoading = false;
         
-        // Handle different error scenarios with appropriate toast messages
         if (error.status === 409 || 
             (error.error && error.error.message && 
              error.error.message.includes('already'))) {
