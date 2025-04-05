@@ -19,7 +19,6 @@ export class AuthGuardService {
   }
 }
 
-// This is the new format for Angular guards in version 14+
 export const AuthGuard: CanActivateFn = (route, state) => {
   return inject(AuthGuardService).canActivate();
 };

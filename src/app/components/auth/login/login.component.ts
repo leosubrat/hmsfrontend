@@ -509,7 +509,12 @@ export class LoginComponent {
           if (this.authService.isDoctor()) {
             console.log('Redirecting to doctor dashboard');
             this.router.navigate(['/doctor/dashboard']);
-          } else {
+          } 
+          else if (this.authService.isUser()) {
+            console.log('Redirecting to user dashboard');
+            this.router.navigate(['/user/dashboard']);
+          } 
+          else {
             console.log('Redirecting to home');
             this.router.navigate(['/']);
           }

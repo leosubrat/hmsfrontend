@@ -47,9 +47,11 @@ interface JwtPayload {
 })
 export class AuthService {
   private baseUrl = environments.apiUrl;
+  private tokenKey = 'access_token';
   private userRoleSubject = new BehaviorSubject<string>('');
   public userRole$ = this.userRoleSubject.asObservable();
-
+ private authStateSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
+ authStateChanged$ = this.authStateSubject.asObservable();
   constructor(private http: HttpClient) { }
     signup(signupData: SignupData): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.baseUrl}/auth/signup`, signupData);
@@ -101,11 +103,14 @@ export class AuthService {
     return localStorage.getItem('refresh_token');
   }
   
+  // logout(): void {
+  //   localStorage.removeItem('access_token');
+  //   localStorage.removeItem('refresh_token');
+  // }
   logout(): void {
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+        this.authStateSubject.next(false);
   }
-  
   isLoggedIn(): boolean {
     return !!this.getAccessToken();
   }
@@ -116,5 +121,12 @@ export class AuthService {
   isDoctor(): boolean {
     const role = this.getCurrentUserRole();
     return role === 'ROLE_DOCTOR';
+  }
+  isUser(): boolean {
+    const role = this.getCurrentUserRole();
+    return role === 'ROLE_USER';
+  }
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
   }
 }

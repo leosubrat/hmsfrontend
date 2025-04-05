@@ -12,5 +12,7 @@ export interface User {
     lastName: string;
     experience: number;
     expertise:string,
-    description:string|null
+    description:string|null;
+    photo: string; // Path to the doctor's photo
+
   }
