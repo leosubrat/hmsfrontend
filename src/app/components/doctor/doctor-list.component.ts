@@ -5,12 +5,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { DoctorDto } from '../../models/doctor.model';
 import { DoctorService } from '../../services/doctor/doctor.service';
 import { environments } from '../../../environments/environment';
+import { RouterLink } from '@angular/router';
+import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 
 
 @Component({
   selector: 'app-doctor-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule,RouterLink,AppointmentFormComponent],
   template: `
     <div class="doctor-list-container">
       <h2>Available Doctors</h2>
@@ -68,10 +70,19 @@ import { environments } from '../../../environments/environment';
               <p>Description:{{ doctor.description }}</p>
             </div>
             <button class="book-appointment-btn" (click)="bookAppointment(doctor)">Book Appointment</button>
-          </div>
+            </div>
         </div>
       </div>
+      <app-appointment-form 
+  *ngIf="selectedDoctor"
+  [doctorId]="selectedDoctor.id"
+  [doctorName]="selectedDoctor.name"
+  [doctorSpecialty]="selectedDoctor.specialty"
+  (closeModal)="closeAppointmentForm()"
+></app-appointment-form>
+
     </div>
+    
   `,
   styles: [`
     .doctor-list-container {
@@ -266,6 +277,8 @@ import { environments } from '../../../environments/environment';
   `]
 })
 export class DoctorListComponent implements OnInit {
+  selectedDoctor: any = null;
+
   doctors: DoctorDto[] = [];
   isLoading: boolean = true;
   error: string | null = null;
@@ -304,28 +317,29 @@ export class DoctorListComponent implements OnInit {
     return `Dr. ${doctor.firstName} ${doctor.lastName}`;
   }
   
-  /**
-   * Get the doctor's photo URL
-   * If no photo is available, return a default image
-   */
+
   getDoctorPhotoUrl(doctor: DoctorDto): string {
     if (doctor.photo) {
-      // Check if the photo path is a full URL or a relative path
       if (doctor.photo.startsWith('http')) {
         return doctor.photo;
       } else {
-        // Assuming the path stored in the database is relative to a known location
         return `${this.baseUrl}/images/doctors/${doctor.photo}`;
       }
     }
     return 'assets/images/default-doctor.png';
   }
   
-  /**
-   * Book an appointment with the selected doctor
-   */
-  bookAppointment(doctor: DoctorDto): void {
-    console.log('Booking appointment with doctor:', doctor);
 
+  bookAppointment(doctor: any): void {
+    this.selectedDoctor = {
+      id: doctor.id,
+      name: `Dr. ${doctor.firstName} ${doctor.lastName}`,
+      specialty: doctor.expertise
+    };
+  }
+  
+  closeAppointmentForm(): void {
+    this.selectedDoctor = null;
   }
 }
+// (click)="bookAppointment(doctor)"
