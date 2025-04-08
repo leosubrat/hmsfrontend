@@ -1,7 +1,7 @@
 // patient-appointment.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { PatientAppointmentDTO } from '../../models/patientAppointmentDTO';
 import { environments } from '../../../environments/environment';
 
@@ -19,7 +19,13 @@ export class PatientAppointmentService {
    * @returns An Observable of the API response
    */
   savePatientAppointment(appointmentDTO: PatientAppointmentDTO): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save/patient-appointment`, appointmentDTO);
+    return this.http.post(`${this.baseUrl}/save/patient-appointment`, appointmentDTO)
+      .pipe(
+        catchError(error => {
+          console.error('HTTP Error:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**

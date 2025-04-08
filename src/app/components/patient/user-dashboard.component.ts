@@ -61,7 +61,7 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
         <div class="dashboard-section">
           <!-- Include the Doctor List Component -->
            <app-doctor-list></app-doctor-list>
-]        </div>
+      </div>
       </div>
     </div>
   `,

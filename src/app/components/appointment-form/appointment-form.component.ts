@@ -78,7 +78,6 @@ export class AppointmentFormComponent {
       .subscribe({
         next: () => {
           this.submitStatus = { success: true, message: 'Appointment booked successfully!' };
-          // Close the modal after 3 seconds
           setTimeout(() => {
             this.submitStatus = null;
             this.closeModal.emit();
