@@ -17,6 +17,7 @@ export interface PatientAppointmentDTO {
   doctorId: number;
   doctorName: string;
   doctorSpecialty: string;
+  doctorLiscenceNo:string;
 }
 
 @Component({
@@ -51,6 +52,7 @@ export class AppointmentFormComponent {
       appointmentTime: ['', Validators.required],
       reasonForVisit: ['', Validators.required],
       insurance: [''],
+      licenseNumber:['',Validators.required],  // Changed to match HTML
       isNewPatient: [false]
     });
   }

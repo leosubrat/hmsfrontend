@@ -60,6 +60,19 @@
                   <div class="error-message">Phone number is required</div>
                 }
               </div>
+              <div class="form-group">
+                <label for="licenseNumber">Doctor lic.no</label>
+                <input 
+                  type="tel" 
+                  id="licenseNumber" 
+                  formControlName="licenseNumber"
+                  class="form-control"
+                  [ngClass]="{'is-invalid': appointmentForm.get('licenseNumber')?.invalid && appointmentForm.get('licenseNumber')?.touched}"
+                >
+                @if (appointmentForm.get('licenseNumber')?.invalid && appointmentForm.get('licenseNumber')?.touched) {
+                  <div class="error-message">liscence number is required</div>
+                }
+              </div>
             </div>
   
             <div class="form-row">

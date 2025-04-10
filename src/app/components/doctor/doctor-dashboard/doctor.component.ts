@@ -1,20 +1,26 @@
 // src/app/components/doctor/doctor-dashboard/doctor-dashboard.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { DoctorService } from '../../../services/doctor/doctor.service';
+import { DoctorNotificationComponent } from '../../doctor-notification/doctor-notification.component';
+import { DoctorNotificationService } from '../../doctor-notification/doctor-notification.service';
+
 
 @Component({
   selector: 'app-doctor-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DoctorNotificationComponent],
   template: `
   <div class="dashboard-container">
     <div class="dashboard-header">
       <h1>Doctor Dashboard</h1>
-      <!-- <button class="logout-btn" (click)="logout()">Logout</button> -->
+      <div class="header-actions">
+        <app-doctor-notification [doctorId]="doctorDto.doctorId"></app-doctor-notification>
+      </div>
     </div>
 
     <div class="dashboard-content">
@@ -111,6 +117,12 @@ styles: [`
   .dashboard-header h1 {
     color: #01579b;
     margin: 0;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
   
   .logout-btn {
@@ -365,11 +377,11 @@ styles: [`
   }
 `]
 })
-export class DoctorDashboardComponent implements OnInit {
+export class DoctorDashboardComponent implements OnInit, OnDestroy {
   doctorInfo: any = null;
   photoPreview: string | null = null;
   photoFile: File | null = null;
-  // photoFile?: File; // Use optional type for the file
+  private subscriptions: Subscription = new Subscription();
 
   doctorDto: any = {
     doctorId: 0,
@@ -389,47 +401,68 @@ export class DoctorDashboardComponent implements OnInit {
   tomorrowSlots: Array<{ startTime: string, endTime: string }> = [
     { startTime: '09:00', endTime: '12:00' }
   ];
+  
   constructor(
     private doctorService: DoctorService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: DoctorNotificationService
   ) {}
   
   ngOnInit(): void {
-    // this.loadDoctorProfile();
+    this.loadDoctorProfile();
   }
   
-  // loadDoctorProfile(): void {
-  //   this.doctorService.getDoctorProfile().subscribe(
-  //     (data) => {
-  //       this.doctorInfo = data;
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+  
+  loadDoctorProfile(): void {
+    this.doctorService.getDoctorProfile().subscribe({
+      next: (data) => {
+        this.doctorInfo = data;
         
-  //       // Set the doctorDto values from the profile data
-  //       this.doctorDto = {
-  //         doctorId: data.doctorId || 0,
-  //         firstName: data.firstName || '',
-  //         lastName: data.lastName || '',
-  //         middleName: data.middleName || '',
-  //         expertise: data.expertise || '',
-  //         experience: data.experience || 0,
-  //         salary: data.salary || '',
-  //         description: data.description || ''
-  //       };
+        // Set the doctorDto values from the profile data
+        this.doctorDto = {
+          doctorId: data.doctorId || 0,
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          middleName: data.middleName || '',
+          expertise: data.expertise || '',
+          experience: data.experience || 0,
+          salary: data.salary || '',
+          description: data.description || ''
+        };
         
-  //       // Load availability if there is any
-  //       if (data.todayAvailability && data.todayAvailability.length > 0) {
-  //         this.todaySlots = data.todayAvailability;
-  //       }
+        // Load availability if there is any
+        if (data.todayAvailability && data.todayAvailability.length > 0) {
+          this.todaySlots = data.todayAvailability;
+        }
         
-  //       if (data.tomorrowAvailability && data.tomorrowAvailability.length > 0) {
-  //         this.tomorrowSlots = data.tomorrowAvailability;
-  //       }
-  //     },
-  //     (error) => {
-  //       console.error('Error loading doctor profile:', error);
-  //     }
-  //   );
-  // }
+        if (data.tomorrowAvailability && data.tomorrowAvailability.length > 0) {
+          this.tomorrowSlots = data.tomorrowAvailability;
+        }
+        
+        // Load notifications after profile is loaded
+        if (this.doctorDto.doctorId > 0) {
+          this.loadNotifications();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading doctor profile:', error);
+      }
+    });
+  }
+  
+  loadNotifications(): void {
+    if (this.doctorDto.doctorId <= 0) return;
+    
+    this.notificationService.getUnreadNotificationCount(this.doctorDto.doctorId).subscribe({
+      error: (error) => {
+        console.error('Error fetching notification count:', error);
+      }
+    });
+  }
   
   addTimeSlot(day: string): void {
     const newSlot = { startTime: '09:00', endTime: '17:00' };
@@ -448,6 +481,7 @@ export class DoctorDashboardComponent implements OnInit {
       this.tomorrowSlots.splice(index, 1);
     }
   }
+  
   saveChanges(): void {
     // Create form data to send photo and other information
     const formData = new FormData();
@@ -459,16 +493,23 @@ export class DoctorDashboardComponent implements OnInit {
       tomorrowAvailability: this.tomorrowSlots
     };
     
-    this.doctorService.updateDoctorProfileWithPhoto(this.doctorDto).subscribe(
-      (response) => {
+    if (this.photoFile) {
+      formData.append('photo', this.photoFile);
+    }
+    
+    formData.append('doctorData', JSON.stringify(doctorData));
+    
+    this.doctorService.updateDoctorProfileWithPhoto(doctorData, this.photoFile || undefined).subscribe({
+      next: (response) => {
         alert('Your profile, photo, and availability have been successfully updated!');
       },
-      (error) => {
+      error: (error) => {
         console.error('Error updating doctor information:', error);
         alert('There was an error updating your information. Please try again.');
       }
-    );
+    });
   }
+  
   onPhotoSelected(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
@@ -483,6 +524,7 @@ export class DoctorDashboardComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+  
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);

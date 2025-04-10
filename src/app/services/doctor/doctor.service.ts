@@ -39,17 +39,54 @@ export class DoctorService {
     
     return headers;
   }
-  updateDoctorProfileWithPhoto(doctorDto: DoctorDto): Observable<any> {
-    const headers= this.getAuthHeaders();
-    console.log(headers);
-    return this.http.put<any>(
-      `${this.baseUrl}/doctor/update`, 
-      { headers }
-    ).pipe(
-      catchError(error => {
-        console.error('Error updating doctor profile with photo', error);
-        return of({ success: false, message: 'Error updating information' });
-      })
-    );
+
+ 
+  /**
+   * Gets the profile information for the currently logged in doctor
+   * @returns Observable of the doctor profile
+   */
+
+  
+  /**
+   * Updates a doctor's profile with photo
+   * @param doctorData - The doctor profile data
+   * @param photoFile - Optional photo file to upload
+   * @returns Observable of the API response
+   */
+  updateDoctorProfileWithPhoto(doctorData: any, photoFile?: File): Observable<any> {
+    // If there's a photo, use FormData approach
+    if (photoFile) {
+      const formData = new FormData();
+      formData.append('photo', photoFile);
+      formData.append('doctorData', JSON.stringify(doctorData));
+      return this.http.put(`${this.baseUrl}/update-profile`, formData);
+    } 
+    // Otherwise just send the JSON data
+    else {
+      return this.http.put(`${this.baseUrl}/update-profile`, doctorData);
+    }
   }
+/**
+   * Gets all upcoming appointments for a doctor
+   * @returns Observable of the appointments list
+   */
+getDoctorAppointments(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/appointments`);
+}
+ /**
+   * Gets the profile information for the currently logged in doctor
+   * @returns Observable of the doctor profile
+   */
+ getDoctorProfile(): Observable<any> {
+  const token = localStorage.getItem('access_token'); // or from your auth service
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+  return this.http.get(`${this.baseUrl}/doctor/notifications/profile`, { headers });}
+/**
+ * @returns Observable of the doctor's schedule
+ */
+getDoctorSchedule(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/schedule`);
+}
 }
