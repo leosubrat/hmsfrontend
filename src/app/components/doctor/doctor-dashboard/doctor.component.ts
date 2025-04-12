@@ -14,7 +14,7 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
   standalone: true,
   imports: [CommonModule, FormsModule, DoctorNotificationComponent],
   template: `
-  <div class="dashboard-wrapper">
+ <div class="dashboard-wrapper">
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="doctor-profile">
@@ -122,21 +122,51 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
           <h2>My Availability</h2>
           
           <div class="availability-tabs">
-            <button class="tab active">Today</button>
-            <button class="tab">Tomorrow</button>
-            <button class="tab">Custom Date</button>
+            <button 
+              class="tab" 
+              [ngClass]="{'active': currentTab === 'today'}" 
+              (click)="changeTab('today')"
+            >Today</button>
+            <button 
+              class="tab" 
+              [ngClass]="{'active': currentTab === 'tomorrow'}" 
+              (click)="changeTab('tomorrow')"
+            >Tomorrow</button>
+            <button 
+              class="tab" 
+              [ngClass]="{'active': currentTab === 'custom'}" 
+              (click)="changeTab('custom')"
+            >Custom Date</button>
           </div>
           
-          <div class="time-slots">
-            <div class="time-slot" *ngFor="let slot of todaySlots; let i = index">
-              <div class="time-range">
-                <input type="time" [(ngModel)]="todaySlots[i].startTime" class="time-input">
-                <span>to</span>
-                <input type="time" [(ngModel)]="todaySlots[i].endTime" class="time-input">
-              </div>
-              <button class="remove-slot-btn" *ngIf="todaySlots.length > 1" (click)="removeTimeSlot('today', i)">✕</button>
+          <div class="custom-date-picker" *ngIf="currentTab === 'custom'">
+            <div class="date-input-container">
+              <label for="custom-date">Select Date:</label>
+              <input 
+                type="date" 
+                id="custom-date" 
+                class="date-input"
+                [(ngModel)]="customDate"
+                [min]="getMinDate()"
+                (change)="onCustomDateChange()"
+              >
             </div>
-            <button class="add-slot-btn" (click)="addTimeSlot('today')">
+            <p class="selected-date-display" *ngIf="customDate">
+              Selected: {{ formatCustomDate() }}
+            </p>
+          </div>
+          
+          <!-- Time slots section - Shows slots based on selected tab -->
+          <div class="time-slots">
+            <div class="time-slot" *ngFor="let slot of getCurrentSlots(); let i = index">
+              <div class="time-range">
+                <input type="time" [(ngModel)]="getCurrentSlots()[i].startTime" class="time-input">
+                <span>to</span>
+                <input type="time" [(ngModel)]="getCurrentSlots()[i].endTime" class="time-input">
+              </div>
+              <button class="remove-slot-btn" *ngIf="getCurrentSlots().length > 1" (click)="removeTimeSlot(i)">✕</button>
+            </div>
+            <button class="add-slot-btn" (click)="addTimeSlot()">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
               </svg>
@@ -508,6 +538,43 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
+    /* Custom Date Picker Styles */
+    .custom-date-picker {
+      margin-bottom: 16px;
+      padding: 12px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .date-input-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .date-input-container label {
+      font-weight: 500;
+      color: #333;
+      min-width: 100px;
+    }
+    
+    .date-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    
+    .selected-date-display {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #01579b;
+      font-weight: 500;
+    }
+    
     .time-slots {
       display: flex;
       flex-direction: column;
@@ -767,6 +834,16 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
       .stats-grid {
         grid-template-columns: 1fr;
       }
+      
+      .custom-date-picker {
+        flex-direction: column;
+      }
+      
+      .date-input-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
     }
   `]
 })
@@ -775,6 +852,16 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   photoPreview: string | null = null;
   photoFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
+
+  // Current selected tab
+  currentTab: 'today' | 'tomorrow' | 'custom' = 'today';
+  
+  // Custom date properties
+  customDate: string = '';
+  customDateSlots: Array<{ startTime: string, endTime: string }> = [];
+  
+  // Store availability for different dates (key: date in YYYY-MM-DD format, value: time slots)
+  customDatesAvailability: { [date: string]: Array<{ startTime: string, endTime: string }> } = {};
 
   doctorDto: any = {
     doctorId: 0,
@@ -804,6 +891,11 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this.loadDoctorProfile();
+    
+    // Initialize custom date as tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 2); // Start with day after tomorrow for custom date default
+    this.customDate = this.formatDateForInput(tomorrow);
   }
   
   ngOnDestroy(): void {
@@ -817,6 +909,75 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     const lastName = this.doctorInfo.lastName || '';
     
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
+  
+  // Change the current tab
+  changeTab(tab: 'today' | 'tomorrow' | 'custom'): void {
+    this.currentTab = tab;
+    
+    if (tab === 'custom' && !this.customDate) {
+      // Set a default date if none is selected
+      const defaultDate = new Date();
+      defaultDate.setDate(defaultDate.getDate() + 2); // Default to day after tomorrow
+      this.customDate = this.formatDateForInput(defaultDate);
+      this.onCustomDateChange();
+    }
+  }
+  
+  // Format date for date input (YYYY-MM-DD)
+  formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  // Get minimum date for date picker (today)
+  getMinDate(): string {
+    return this.formatDateForInput(new Date());
+  }
+  
+  // Format custom date for display
+  formatCustomDate(): string {
+    if (!this.customDate) return '';
+    
+    const date = new Date(this.customDate);
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  }
+  
+  // Handle custom date change
+  onCustomDateChange(): void {
+    if (!this.customDate) return;
+    
+    // Check if we already have slots for this date
+    if (!this.customDatesAvailability[this.customDate]) {
+      // Initialize with default slot
+      this.customDatesAvailability[this.customDate] = [
+        { startTime: '09:00', endTime: '17:00' }
+      ];
+    }
+    
+    // Update custom date slots reference
+    this.customDateSlots = this.customDatesAvailability[this.customDate];
+  }
+  
+  // Get current slots based on selected tab
+  getCurrentSlots(): Array<{ startTime: string, endTime: string }> {
+    switch(this.currentTab) {
+      case 'today':
+        return this.todaySlots;
+      case 'tomorrow':
+        return this.tomorrowSlots;
+      case 'custom':
+        return this.customDateSlots;
+      default:
+        return this.todaySlots;
+    }
   }
   
   loadDoctorProfile(): void {
@@ -845,6 +1006,16 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
           this.tomorrowSlots = data.tomorrowAvailability;
         }
         
+        // Load custom dates availability if there is any
+        if (data.customDatesAvailability) {
+          this.customDatesAvailability = data.customDatesAvailability;
+          
+          // Initialize custom date slots if there's a selected date
+          if (this.customDate && this.customDatesAvailability[this.customDate]) {
+            this.customDateSlots = this.customDatesAvailability[this.customDate];
+          }
+        }
+        
         // Load notifications after profile is loaded
         if (this.doctorDto.doctorId > 0) {
           this.loadNotifications();
@@ -866,33 +1037,30 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     });
   }
   
-  addTimeSlot(day: string): void {
+  addTimeSlot(): void {
     const newSlot = { startTime: '09:00', endTime: '17:00' };
-    
-    if (day === 'today') {
-      this.todaySlots.push(newSlot);
-    } else {
-      this.tomorrowSlots.push(newSlot);
-    }
+    this.getCurrentSlots().push(newSlot);
   }
   
-  removeTimeSlot(day: string, index: number): void {
-    if (day === 'today') {
-      this.todaySlots.splice(index, 1);
-    } else {
-      this.tomorrowSlots.splice(index, 1);
-    }
+  removeTimeSlot(index: number): void {
+    this.getCurrentSlots().splice(index, 1);
   }
   
   saveChanges(): void {
     // Create form data to send photo and other information
     const formData = new FormData();
 
+    // Collect all availability data
+    const availabilityData = {
+      todayAvailability: this.todaySlots,
+      tomorrowAvailability: this.tomorrowSlots,
+      customDatesAvailability: this.customDatesAvailability
+    };
+
     // Add doctor information as JSON string
     const doctorData = {
       ...this.doctorDto,
-      todayAvailability: this.todaySlots,
-      tomorrowAvailability: this.tomorrowSlots
+      ...availabilityData
     };
     
     if (this.photoFile) {
