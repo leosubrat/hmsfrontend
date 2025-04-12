@@ -35,4 +35,11 @@ export class UserService {
     });
     return this.http.post<UserDto>(`${this.baseUrl}/user/update`,userDto,{headers});
   }
+  getUserDetails(): Observable<UserDto> {
+    const token = localStorage.getItem('access_token'); // or from your auth service
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<UserDto>(`${this.baseUrl}/get/user/detail`,{headers});
+  }
 }

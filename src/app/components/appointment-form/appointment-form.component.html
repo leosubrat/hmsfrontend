@@ -1,156 +1,187 @@
 <!-- appointment-form.component.html -->
 <div class="modal-backdrop">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Header -->
-        <div class="modal-header">
-          <h2 class="modal-title">Book Appointment</h2>
-          <p class="modal-subtitle">with {{ doctorName }} • {{ doctorSpecialty }}</p>
-          <button type="button" class="close-button" (click)="close()" aria-label="Close">×</button>
-        </div>
-  
-        <!-- Status message after submit -->
-        @if (submitStatus) {
-          <div class="modal-body status-message" [ngClass]="submitStatus.success ? 'success' : 'error'">
-            <div class="status-icon">{{ submitStatus.success ? '✓' : '✗' }}</div>
-            <p>{{ submitStatus.message }}</p>
-          </div>
-        } @else {
-          <!-- Form -->
-          <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="modal-body">
-            <div class="form-group">
-              <label for="patientName">Patient Name</label>
-              <input 
-                type="text" 
-                id="patientName" 
-                formControlName="patientName"
-                class="form-control"
-                [ngClass]="{'is-invalid': appointmentForm.get('patientName')?.invalid && appointmentForm.get('patientName')?.touched}"
-              >
-              @if (appointmentForm.get('patientName')?.invalid && appointmentForm.get('patientName')?.touched) {
-                <div class="error-message">Patient name is required</div>
-              }
-            </div>
-  
-            <div class="form-row">
-              <div class="form-group">
-                <label for="patientEmail">Email</label>
-                <input 
-                  type="email" 
-                  id="patientEmail" 
-                  formControlName="patientEmail"
-                  class="form-control"
-                  [ngClass]="{'is-invalid': appointmentForm.get('patientEmail')?.invalid && appointmentForm.get('patientEmail')?.touched}"
-                >
-                @if (appointmentForm.get('patientEmail')?.invalid && appointmentForm.get('patientEmail')?.touched) {
-                  <div class="error-message">Valid email is required</div>
-                }
-              </div>
-  
-              <div class="form-group">
-                <label for="patientPhone">Phone</label>
-                <input 
-                  type="tel" 
-                  id="patientPhone" 
-                  formControlName="patientPhone"
-                  class="form-control"
-                  [ngClass]="{'is-invalid': appointmentForm.get('patientPhone')?.invalid && appointmentForm.get('patientPhone')?.touched}"
-                >
-                @if (appointmentForm.get('patientPhone')?.invalid && appointmentForm.get('patientPhone')?.touched) {
-                  <div class="error-message">Phone number is required</div>
-                }
-              </div>
-              <div class="form-group">
-                <label for="licenseNumber">Doctor lic.no</label>
-                <input 
-                  type="tel" 
-                  id="licenseNumber" 
-                  formControlName="licenseNumber"
-                  class="form-control"
-                  [ngClass]="{'is-invalid': appointmentForm.get('licenseNumber')?.invalid && appointmentForm.get('licenseNumber')?.touched}"
-                >
-                @if (appointmentForm.get('licenseNumber')?.invalid && appointmentForm.get('licenseNumber')?.touched) {
-                  <div class="error-message">liscence number is required</div>
-                }
-              </div>
-            </div>
-  
-            <div class="form-row">
-              <div class="form-group">
-                <label for="appointmentDate">Date</label>
-                <input 
-                  type="date" 
-                  id="appointmentDate" 
-                  formControlName="appointmentDate"
-                  class="form-control"
-                  [min]="minDate"
-                  [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}"
-                >
-                @if (appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched) {
-                  <div class="error-message">Date is required</div>
-                }
-              </div>
-  
-              <div class="form-group">
-                <label for="appointmentTime">Time</label>
-                <select 
-                  id="appointmentTime" 
-                  formControlName="appointmentTime"
-                  class="form-control"
-                  [ngClass]="{'is-invalid': appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched}"
-                >
-                  <option value="">Select time</option>
-                  @for (time of timeSlots; track time) {
-                    <option [value]="time">{{ time }}</option>
-                  }
-                </select>
-                @if (appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched) {
-                  <div class="error-message">Time is required</div>
-                }
-              </div>
-            </div>
-  
-            <div class="form-group">
-              <label for="reasonForVisit">Reason for Visit</label>
-              <textarea 
-                id="reasonForVisit" 
-                formControlName="reasonForVisit"
-                rows="3"
-                class="form-control"
-                [ngClass]="{'is-invalid': appointmentForm.get('reasonForVisit')?.invalid && appointmentForm.get('reasonForVisit')?.touched}"
-              ></textarea>
-              @if (appointmentForm.get('reasonForVisit')?.invalid && appointmentForm.get('reasonForVisit')?.touched) {
-                <div class="error-message">Reason for visit is required</div>
-              }
-            </div>
-  
-            <div class="form-group">
-              <label for="insurance">Insurance Provider</label>
-              <input 
-                type="text" 
-                id="insurance" 
-                formControlName="insurance"
-                class="form-control"
-              >
-            </div>
-  
-            <div class="form-group checkbox">
-              <input 
-                type="checkbox" 
-                id="isNewPatient" 
-                formControlName="isNewPatient"
-              >
-              <label for="isNewPatient">I am a new patient</label>
-            </div>
-  
-            <div class="form-actions">
-              <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
-              <button type="submit" class="btn btn-primary" [disabled]="isSubmitting" routerLink="/patient/book/appointment">
-                {{ isSubmitting ? 'Booking...' : 'Book Appointment' }} 
-              </button>
-            </div>
-          </form>
-        }
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h2 class="modal-title">Book Appointment</h2>
+        <p class="modal-subtitle">with {{ doctorName }} • {{ doctorSpecialty }}</p>
+        <button type="button" class="close-button" (click)="close()" aria-label="Close">×</button>
       </div>
+
+      <!-- Status message after submit -->
+      @if (submitStatus) {
+        <div class="modal-body status-message" [ngClass]="submitStatus.success ? 'success' : 'error'">
+          <div class="status-icon">{{ submitStatus.success ? '✓' : '✗' }}</div>
+          <p>{{ submitStatus.message }}</p>
+        </div>
+      } @else {
+        <!-- Form -->
+        <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="modal-body">
+          <!-- Loading indicator for user data -->
+          @if (isLoadingUserData) {
+            <div class="loading-user-data">
+              <div class="spinner-sm"></div>
+              <span>Loading your information...</span>
+            </div>
+          }
+          
+          <!-- Name fields (separated into first and last name) -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                formControlName="firstName"
+                class="form-control"
+                [ngClass]="{'is-invalid': appointmentForm.get('firstName')?.invalid && appointmentForm.get('firstName')?.touched}"
+              >
+              @if (appointmentForm.get('firstName')?.invalid && appointmentForm.get('firstName')?.touched) {
+                <div class="error-message">First name is required</div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                formControlName="lastName"
+                class="form-control"
+                [ngClass]="{'is-invalid': appointmentForm.get('lastName')?.invalid && appointmentForm.get('lastName')?.touched}"
+              >
+              @if (appointmentForm.get('lastName')?.invalid && appointmentForm.get('lastName')?.touched) {
+                <div class="error-message">Last name is required</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patientEmail">Email</label>
+              <input 
+                type="email" 
+                id="patientEmail" 
+                formControlName="patientEmail"
+                class="form-control"
+                [ngClass]="{'is-invalid': appointmentForm.get('patientEmail')?.invalid && appointmentForm.get('patientEmail')?.touched}"
+              >
+              @if (appointmentForm.get('patientEmail')?.invalid && appointmentForm.get('patientEmail')?.touched) {
+                <div class="error-message">Valid email is required</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="patientPhone">Phone</label>
+              <input 
+                type="tel" 
+                id="patientPhone" 
+                formControlName="patientPhone"
+                class="form-control"
+                [ngClass]="{'is-invalid': appointmentForm.get('patientPhone')?.invalid && appointmentForm.get('patientPhone')?.touched}"
+              >
+              @if (appointmentForm.get('patientPhone')?.invalid && appointmentForm.get('patientPhone')?.touched) {
+                <div class="error-message">Phone number is required</div>
+              }
+            </div>
+          </div>
+          
+          <!-- Doctor selection dropdown -->
+          <div class="form-group">
+            <label for="doctorId">Select Doctor</label>
+            <select 
+              id="doctorId" 
+              formControlName="doctorId"
+              class="form-control"
+              [ngClass]="{'is-invalid': appointmentForm.get('doctorId')?.invalid && appointmentForm.get('doctorId')?.touched}"
+            >
+              <option value="">Choose a doctor</option>
+              @for (doctor of doctors; track doctor.doctorId) {
+                <option [value]="doctor.doctorId">Dr. {{ doctor.firstName }} {{ doctor.lastName }} - {{ doctor.expertise }}</option>
+              }
+            </select>
+            @if (appointmentForm.get('doctorId')?.invalid && appointmentForm.get('doctorId')?.touched) {
+              <div class="error-message">Please select a doctor</div>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="appointmentDate">Date</label>
+              <input 
+                type="date" 
+                id="appointmentDate" 
+                formControlName="appointmentDate"
+                class="form-control"
+                [min]="minDate"
+                [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}"
+              >
+              @if (appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched) {
+                <div class="error-message">Date is required</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="appointmentTime">Time</label>
+              <select 
+                id="appointmentTime" 
+                formControlName="appointmentTime"
+                class="form-control"
+                [ngClass]="{'is-invalid': appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched}"
+              >
+                <option value="">Select time</option>
+                @for (time of timeSlots; track time) {
+                  <option [value]="time">{{ time }}</option>
+                }
+              </select>
+              @if (appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched) {
+                <div class="error-message">Time is required</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reasonForVisit">Reason for Visit</label>
+            <textarea 
+              id="reasonForVisit" 
+              formControlName="reasonForVisit"
+              rows="3"
+              class="form-control"
+              [ngClass]="{'is-invalid': appointmentForm.get('reasonForVisit')?.invalid && appointmentForm.get('reasonForVisit')?.touched}"
+            ></textarea>
+            @if (appointmentForm.get('reasonForVisit')?.invalid && appointmentForm.get('reasonForVisit')?.touched) {
+              <div class="error-message">Reason for visit is required</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="insurance">Insurance Provider</label>
+            <input 
+              type="text" 
+              id="insurance" 
+              formControlName="insurance"
+              class="form-control"
+            >
+          </div>
+
+          <div class="form-group checkbox">
+            <input 
+              type="checkbox" 
+              id="isNewPatient" 
+              formControlName="isNewPatient"
+            >
+            <label for="isNewPatient">I am a new patient</label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting" routerLink="/patient/book/appointment">
+              {{ isSubmitting ? 'Booking...' : 'Book Appointment' }} 
+            </button>
+          </div>
+        </form>
+      }
     </div>
   </div>
+</div>

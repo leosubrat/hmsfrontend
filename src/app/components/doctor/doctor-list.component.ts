@@ -8,14 +8,16 @@ import { environments } from '../../../environments/environment';
 import { RouterLink } from '@angular/router';
 import { AppointmentFormComponent } from '../appointment-form/appointment-form.component';
 
-
 @Component({
   selector: 'app-doctor-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule,RouterLink,AppointmentFormComponent],
+  imports: [CommonModule, HttpClientModule, AppointmentFormComponent],
   template: `
     <div class="doctor-list-container">
-      <h2>Available Doctors</h2>
+      <div class="doctor-list-header">
+        <h2>Find a Specialist</h2>
+        <p class="subtitle">Book an appointment with one of our top specialists</p>
+      </div>
       
       <!-- Loading state -->
       <div class="loading-state" *ngIf="isLoading">
@@ -30,12 +32,12 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
       <!-- Error state -->
       <div class="error-state" *ngIf="error">
         <div class="error-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
           </svg>
         </div>
         <p>{{ error }}</p>
-        <button (click)="loadDoctors()" class="retry-button">Retry</button>
+        <button (click)="loadDoctors()" class="retry-button">Try Again</button>
       </div>
       
       <!-- Empty state -->
@@ -52,52 +54,89 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
       <!-- Doctor list -->
       <div class="doctors-grid" *ngIf="!isLoading && !error && doctors.length > 0">
         <div class="doctor-card" *ngFor="let doctor of doctors">
-          <div class="doctor-image">
-            <img [src]="getDoctorPhotoUrl(doctor)" [alt]="getFullName(doctor)">
-          </div>
-          <div class="doctor-info">
-            <h3>{{ getFullName(doctor) }}</h3>
-            <p class="specialization">{{ doctor.expertise }}</p>
-            <p class="experience" *ngIf="doctor.experience">
-              <span class="experience-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+          <div class="doctor-card-inner">
+            <div class="doctor-avatar">
+              <div class="avatar-circle">
+                <span>{{ getInitials(doctor) }}</span>
+              </div>
+            </div>
+            
+            <div class="doctor-info">
+              <h3>{{ getFullName(doctor) }}</h3>
+              <div class="specialty-badge">{{ doctor.expertise }}</div>
+              
+              <div class="details-row">
+                <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                  </svg>
+                  <span>{{ doctor.experience }} years experience</span>
+                </div>
+                
+                <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+                  </svg>
+                  <span>Top Rated</span>
+                </div>
+              </div>
+              
+              <div class="description" *ngIf="doctor.description">
+                <p>{{ truncateDescription(doctor.description, 120) }}</p>
+              </div>
+              
+              <div class="availability">
+                <span class="availability-icon available">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </span>
+                <span>Available Today</span>
+              </div>
+              
+              <button class="book-appointment-btn" (click)="bookAppointment(doctor)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
                 </svg>
-              </span>
-              {{ doctor.experience }} years experience
-            </p>
-            <div class="description" *ngIf="doctor.description">
-              <p>Description:{{ doctor.description }}</p>
+                Book Appointment
+              </button>
             </div>
-            <button class="book-appointment-btn" (click)="bookAppointment(doctor)">Book Appointment</button>
-            </div>
+          </div>
         </div>
       </div>
+      
       <app-appointment-form 
-  *ngIf="selectedDoctor"
-  [doctorId]="selectedDoctor.id"
-  [doctorName]="selectedDoctor.name"
-  [doctorSpecialty]="selectedDoctor.specialty"
-  (closeModal)="closeAppointmentForm()"
-></app-appointment-form>
-
+        *ngIf="selectedDoctor"
+        [doctorId]="selectedDoctor.id"
+        [doctorName]="selectedDoctor.name"
+        [doctorSpecialty]="selectedDoctor.specialty"
+        (closeModal)="closeAppointmentForm()"
+      ></app-appointment-form>
     </div>
-    
   `,
   styles: [`
     .doctor-list-container {
-      padding: 24px;
+      padding: 30px;
       background-color: #f8f9fa;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .doctor-list-header {
+      text-align: center;
+      margin-bottom: 30px;
     }
     
     h2 {
       color: #0d2437;
-      margin-bottom: 20px;
-      font-weight: 600;
-      border-bottom: 2px solid #4db6ac;
-      padding-bottom: 10px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      color: #757575;
+      font-size: 16px;
     }
     
     .loading-state,
@@ -107,15 +146,18 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
+      padding: 60px 40px;
       text-align: center;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     }
     
     .spinner {
       animation: rotate 2s linear infinite;
-      width: 50px;
-      height: 50px;
-      margin-bottom: 20px;
+      width: 60px;
+      height: 60px;
+      margin-bottom: 24px;
     }
     
     .spinner .path {
@@ -147,7 +189,7 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
     
     .error-icon,
     .empty-icon {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       color: #f44336;
       font-size: 48px;
     }
@@ -156,15 +198,23 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
       color: #9e9e9e;
     }
     
+    .error-state p,
+    .empty-state p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #757575;
+    }
+    
     .retry-button {
       margin-top: 15px;
-      padding: 8px 16px;
+      padding: 12px 24px;
       background-color: #4db6ac;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 16px;
       transition: background-color 0.3s;
     }
     
@@ -174,104 +224,153 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
     
     .doctors-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
       margin-top: 20px;
     }
     
     .doctor-card {
       background-color: white;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
       transition: transform 0.3s, box-shadow 0.3s;
     }
     
     .doctor-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
     
-    .doctor-image {
-      position: relative;
-      height: 180px;
-      overflow: hidden;
-      background-color: #f0f0f0;
+    .doctor-card-inner {
+      padding: 24px;
     }
     
-    .doctor-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s;
+    .doctor-avatar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
     }
     
-    .doctor-card:hover .doctor-image img {
-      transform: scale(1.05);
+    .avatar-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4db6ac 0%, #26a69a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 36px;
+      font-weight: 600;
+      box-shadow: 0 8px 16px rgba(77, 182, 172, 0.3);
     }
     
     .doctor-info {
-      padding: 15px;
+      text-align: center;
     }
     
     .doctor-info h3 {
-      margin: 0 0 8px 0;
+      margin: 0 0 12px 0;
       color: #0d2437;
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: 600;
     }
     
-    .specialization {
-      color: #4db6ac;
+    .specialty-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: #e3f2fd;
+      color: #1976d2;
+      border-radius: 20px;
       font-weight: 500;
-      margin-bottom: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
       text-transform: capitalize;
     }
     
-    .experience {
+    .details-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .detail-item {
       display: flex;
       align-items: center;
+      gap: 6px;
       color: #616161;
-      margin-bottom: 12px;
       font-size: 14px;
     }
     
-    .experience-icon {
-      margin-right: 6px;
-      display: inline-flex;
+    .detail-item svg {
+      opacity: 0.7;
     }
     
     .description {
-      margin: 12px 0;
+      margin: 16px 0;
       color: #666;
       font-size: 14px;
       line-height: 1.6;
-      max-height: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+      text-align: left;
+      padding: 16px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+    
+    .description p {
+      margin: 0;
+    }
+    
+    .availability {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: #43a047;
+      font-weight: 500;
+    }
+    
+    .availability-icon {
+      display: flex;
     }
     
     .book-appointment-btn {
       width: 100%;
-      padding: 10px;
+      padding: 14px;
       background-color: #4db6ac;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 500;
-      transition: background-color 0.3s;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
     }
     
     .book-appointment-btn:hover {
       background-color: #00897b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(77, 182, 172, 0.4);
     }
     
     @media (max-width: 768px) {
       .doctors-grid {
         grid-template-columns: 1fr;
+      }
+      
+      .doctor-list-container {
+        padding: 20px;
+      }
+      
+      .doctor-card-inner {
+        padding: 20px;
       }
     }
   `]
@@ -307,9 +406,6 @@ export class DoctorListComponent implements OnInit {
     });
   }
   
-  /**
-   * Get the full name of the doctor
-   */
   getFullName(doctor: DoctorDto): string {
     if (doctor.middleName) {
       return `Dr. ${doctor.firstName} ${doctor.middleName} ${doctor.lastName}`;
@@ -317,18 +413,19 @@ export class DoctorListComponent implements OnInit {
     return `Dr. ${doctor.firstName} ${doctor.lastName}`;
   }
   
-
-  getDoctorPhotoUrl(doctor: DoctorDto): string {
-    if (doctor.photo) {
-      if (doctor.photo.startsWith('http')) {
-        return doctor.photo;
-      } else {
-        return `${this.baseUrl}/images/doctors/${doctor.photo}`;
-      }
-    }
-    return 'assets/images/default-doctor.png';
+  getInitials(doctor: DoctorDto): string {
+    return (doctor.firstName.charAt(0) + doctor.lastName.charAt(0)).toUpperCase();
   }
   
+  truncateDescription(description: string, maxLength: number): string {
+    if (!description) return '';
+    
+    if (description.length <= maxLength) {
+      return description;
+    }
+    
+    return description.substring(0, maxLength) + '...';
+  }
 
   bookAppointment(doctor: any): void {
     this.selectedDoctor = {
@@ -342,4 +439,3 @@ export class DoctorListComponent implements OnInit {
     this.selectedDoctor = null;
   }
 }
-// (click)="bookAppointment(doctor)"

@@ -44,11 +44,9 @@ export class AppComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Subscribe to router events to check the current route
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      // Check if the current route is part of the user dashboard experience
       const url = event.urlAfterRedirects || event.url;
       this.showNavbar = !this.isUserDashboardRoute(url);
     });
@@ -59,7 +57,8 @@ export class AppComponent implements OnInit {
       '/user/dashboard',
       '/get/user/profile',
       '/get/all/appointment',
-      '/patient/book/appointment'
+      '/patient/book/appointment',
+      '/doctor/dashboard'
     ];
     
     // Check if the current URL matches any of these routes

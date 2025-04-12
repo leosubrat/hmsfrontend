@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PatientAppointmentService } from '../../services/appointment/ patient-appointment.service';
 import { PatientAppointmentDTO } from '../../models/patientAppointmentDTO';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   template: `
     <div class="appointments-container">
       <h2>Your Appointments</h2>
@@ -25,7 +25,6 @@ import { ActivatedRoute } from '@angular/router';
       
       <div *ngIf="!loading && !error && appointments.length === 0" class="no-appointments">
         <p>You don't have any appointments yet.</p>
-        <button>Book Your First Appointment</button>
       </div>
       
       <div *ngIf="appointments.length > 0" class="appointments-list">
@@ -270,4 +269,5 @@ export class AppointmentListComponent implements OnInit {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
+  
 }

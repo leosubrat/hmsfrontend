@@ -1,8 +1,9 @@
 // src/app/components/user/dashboard/user-dashboard.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { DoctorListComponent } from '../doctor/doctor-list.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -12,7 +13,9 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
     <div class="dashboard-container">
       <div class="dashboard-header">
         <h1>Welcome to Your Dashboard</h1>
-        <p>Find and book appointments with top doctors</p>
+        <div class="header-actions">
+          <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
       </div>
       
       <div class="dashboard-content">
@@ -61,7 +64,7 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
         <div class="dashboard-section">
           <!-- Include the Doctor List Component -->
            <app-doctor-list></app-doctor-list>
-      </div>
+        </div>
       </div>
     </div>
   `,
@@ -74,18 +77,30 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
     
     .dashboard-header {
       margin-bottom: 30px;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
     .dashboard-header h1 {
       font-size: 2.5rem;
       color: #0d2437;
-      margin-bottom: 10px;
+      margin-bottom: 0;
     }
     
-    .dashboard-header p {
-      color: #757575;
-      font-size: 1.1rem;
+    .logout-btn {
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background-color: #d32f2f;
     }
     
     .dashboard-content {
@@ -154,6 +169,12 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
     }
     
     @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      
       .dashboard-header h1 {
         font-size: 2rem;
       }
@@ -165,5 +186,13 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
   `]
 })
 export class UserDashboardComponent {
-  // Component logic will go here
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+  
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
 }
