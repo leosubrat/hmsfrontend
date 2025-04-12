@@ -1,9 +1,10 @@
 // src/app/app.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,8 @@ import { FooterComponent } from './components/footer/footer.component';
   imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent],
   template: `
     <div class="app-container">
-      <app-navbar></app-navbar>
-      <main class="content">
+      <app-navbar *ngIf="showNavbar"></app-navbar>
+      <main class="content" [ngClass]="{'no-padding': !showNavbar}">
         <router-outlet></router-outlet>
       </main>
       <app-footer></app-footer>
@@ -30,8 +31,38 @@ import { FooterComponent } from './components/footer/footer.component';
       flex: 1;
       padding: 20px;
     }
+    
+    .no-padding {
+      padding: 0;
+    }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'HospitalityHub';
+  showNavbar = true;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Subscribe to router events to check the current route
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      // Check if the current route is part of the user dashboard experience
+      const url = event.urlAfterRedirects || event.url;
+      this.showNavbar = !this.isUserDashboardRoute(url);
+    });
+  }
+  
+  private isUserDashboardRoute(url: string): boolean {
+    const userDashboardRoutes = [
+      '/user/dashboard',
+      '/get/user/profile',
+      '/get/all/appointment',
+      '/patient/book/appointment'
+    ];
+    
+    // Check if the current URL matches any of these routes
+    return userDashboardRoutes.some(route => url.startsWith(route));
+  }
 }

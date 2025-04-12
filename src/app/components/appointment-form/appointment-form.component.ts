@@ -4,21 +4,22 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { PatientAppointmentService } from '../../services/appointment/ patient-appointment.service';
+import { PatientAppointmentDTO } from '../../models/patientAppointmentDTO';
 
-export interface PatientAppointmentDTO {
-  patientName: string;
-  patientEmail: string;
-  patientPhone: string;
-  appointmentDate: string;
-  appointmentTime: string;
-  reasonForVisit: string;
-  insurance: string;
-  isNewPatient: boolean;
-  doctorId: number;
-  doctorName: string;
-  doctorSpecialty: string;
-  doctorLiscenceNo:string;
-}
+// export interface PatientAppointmentDTO {
+//   patientName: string;
+//   patientEmail: string;
+//   patientPhone: string;
+//   appointmentDate: string;
+//   appointmentTime: string;
+//   reasonForVisit: string;
+//   insurance: string;
+//   isNewPatient: boolean;
+//   doctorId: number;
+//   doctorName: string;
+//   doctorSpecialty: string;
+//   doctorLiscenceNo:string;
+// }
 
 @Component({
   selector: 'app-appointment-form',

@@ -19,7 +19,7 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
         <div class="dashboard-card quick-actions">
           <h2>Quick Actions</h2>
           <div class="action-buttons">
-            <button class="action-button">
+            <button class="action-button" routerLink="/get/all/appointment">
               <div class="icon-container">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                   <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
@@ -47,7 +47,7 @@ import { DoctorListComponent } from '../doctor/doctor-list.component';
               <span>Appointments</span>
             </button>
             
-            <button class="action-button">
+            <button class="action-button" routerLink="/get/user/profile">
               <div class="icon-container">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>

@@ -8,24 +8,14 @@ import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard/d
 import { AuthGuard } from './guards/auth.guard';
 import { UserDashboardComponent } from './components/patient/user-dashboard.component';
 import { AppointmentFormComponent } from './components/appointment-form/appointment-form.component';
+import { AppointmentListComponent } from './components/appointment-form/appointment-list.component';
+import { UserProfileComponent } from './components/patient/user-profile.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomeComponent
   },
-//   {
-//     path: 'about',
-//     loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent)
-//   },
-//   {
-//     path: 'services',
-//     loadComponent: () => import('./components/services/services.component').then(m => m.ServicesComponent)
-//   },
-//   {
-//     path: 'doctors',
-//     loadComponent: () => import('./components/doctors/doctors.component').then(m => m.DoctorsComponent)
-//   },
   {
     path: 'auth/signup',
     component: SignupComponent
@@ -34,10 +24,7 @@ export const routes: Routes = [
     path: 'auth/login',
     component: LoginComponent
   },
-//   {
-//     path: 'auth/signup',
-//     loadComponent: () => import('./components/auth/signup/signup.component').then(m => m.SignupComponent)
-//   },
+
   {
     path: 'auth/forgot-password',
     loadComponent: () => import('./components/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
@@ -64,6 +51,16 @@ export const routes: Routes = [
   {
     path:'patient/book/appointment',
     component:AppointmentFormComponent,
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'get/all/appointment',
+    component:AppointmentListComponent,
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'get/user/profile',
+    component:UserProfileComponent,
     canActivate:[AuthGuard]
   },
   {
