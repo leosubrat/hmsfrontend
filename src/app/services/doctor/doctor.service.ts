@@ -40,36 +40,8 @@ export class DoctorService {
     return headers;
   }
 
- 
-  /**
-   * Gets the profile information for the currently logged in doctor
-   * @returns Observable of the doctor profile
-   */
 
-  
-  /**
-   * Updates a doctor's profile with photo
-   * @param doctorData - The doctor profile data
-   * @param photoFile - Optional photo file to upload
-   * @returns Observable of the API response
-   */
-  updateDoctorProfileWithPhoto(doctorData: any, photoFile?: File): Observable<any> {
-    // If there's a photo, use FormData approach
-    if (photoFile) {
-      const formData = new FormData();
-      formData.append('photo', photoFile);
-      formData.append('doctorData', JSON.stringify(doctorData));
-      return this.http.put(`${this.baseUrl}/update-profile`, formData);
-    } 
-    // Otherwise just send the JSON data
-    else {
-      return this.http.put(`${this.baseUrl}/update-profile`, doctorData);
-    }
-  }
-/**
-   * Gets all upcoming appointments for a doctor
-   * @returns Observable of the appointments list
-   */
+
 getDoctorAppointments(): Observable<any> {
   return this.http.get(`${this.baseUrl}/appointments`);
 }
@@ -83,10 +55,19 @@ getDoctorAppointments(): Observable<any> {
     'Authorization': `Bearer ${token}`
   });
   return this.http.get(`${this.baseUrl}/doctor/notifications/profile`, { headers });}
-/**
- * @returns Observable of the doctor's schedule
- */
+
 getDoctorSchedule(): Observable<any> {
   return this.http.get(`${this.baseUrl}/schedule`);
 }
+
+  // Update the doctor profile
+  updateDoctorProfile(doctorData: any): Observable<any> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    console.log('Using token for authentication:', token ? 'Token exists' : 'No token found');
+    return this.http.put(`${this.baseUrl}/doctor/update`, doctorData, { headers });
+  }
 }

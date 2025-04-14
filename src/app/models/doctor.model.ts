@@ -13,6 +13,6 @@ export interface User {
     experience: number;
     expertise:string,
     description:string|null;
-    photo: string; // Path to the doctor's photo
-
+    photo: string; 
+    licenseNumber:string;
   }

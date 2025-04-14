@@ -15,227 +15,210 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
   imports: [CommonModule, FormsModule, DoctorNotificationComponent],
   template: `
  <div class="dashboard-wrapper">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="doctor-profile">
-          <div class="doctor-avatar" [ngStyle]="{'background-image': photoPreview ? 'url(' + photoPreview + ')' : 'none'}">
-            <span *ngIf="!photoPreview">{{ getInitials() }}</span>
-          </div>
-          <div class="doctor-info">
-            <h3>Dr. {{ doctorInfo?.firstName }} {{ doctorInfo?.lastName }}</h3>
-            <p>{{ doctorInfo?.expertise }}</p>
-          </div>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="doctor-profile">
+        <div class="doctor-avatar" [ngStyle]="{'background-image': photoPreview ? 'url(' + photoPreview + ')' : 'none'}">
+          <span *ngIf="!photoPreview">{{ getInitials() }}</span>
+        </div>
+        <div class="doctor-info">
+          <h3>Dr. {{ doctorInfo?.firstName }} {{ doctorInfo?.lastName }}</h3>
+          <p>{{ doctorInfo?.expertise }}</p>
         </div>
       </div>
-      
-      <nav class="sidebar-nav">
-        <button class="nav-item active">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-          </svg>
-          <span>Dashboard</span>
-        </button>
-        
-        <button class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
-          </svg>
-          <span>Appointments</span>
-        </button>
-        
-        <button class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-          <span>My Profile</span>
-        </button>
-        
-        <button class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-          </svg>
-          <span>Settings</span>
-        </button>
-        
-        <button class="nav-item logout" (click)="logout()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-          </svg>
-          <span>Logout</span>
-        </button>
-      </nav>
-    </aside>
+    </div>
     
-    <main class="main-content">
-      <header class="main-header">
-        <h1>Doctor Dashboard</h1>
-        <div class="header-actions">
-          <app-doctor-notification [doctorId]="doctorDto.doctorId"></app-doctor-notification>
-        </div>
-      </header>
+    <nav class="sidebar-nav">
+      <button class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        <span>Dashboard</span>
+      </button>
       
-      <div class="dashboard-grid">
-        <div class="dashboard-card summary-stats">
-          <h2>Summary</h2>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-value">12</div>
-              <div class="stat-label">Appointments Today</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">45</div>
-              <div class="stat-label">Total Patients</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">4.8</div>
-              <div class="stat-label">Rating</div>
-            </div>
+      <button class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
+        </svg>
+        <span>Appointments</span>
+      </button>
+      
+      <button class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        <span>My Profile</span>
+      </button>
+      
+      <button class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+        <span>Settings</span>
+      </button>
+      
+      <button class="nav-item logout" (click)="logout()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        <span>Logout</span>
+      </button>
+    </nav>
+  </aside>
+  
+  <main class="main-content">
+    <header class="main-header">
+      <h1>Doctor Dashboard</h1>
+      <div class="header-actions">
+        <app-doctor-notification [doctorId]="doctorDto.doctorId"></app-doctor-notification>
+      </div>
+    </header>
+    
+    <div class="dashboard-grid">
+      <div class="dashboard-card summary-stats">
+        <h2>Summary</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Appointments Today</div>
           </div>
-        </div>
-        
-        <div class="dashboard-card profile-form">
-          <h2>Professional Profile</h2>
-          <div class="form-group">
-            <label for="description">Professional Description</label>
-            <textarea 
-              id="description" 
-              rows="4" 
-              [(ngModel)]="doctorDto.description" 
-              placeholder="Describe your expertise, education, and approach to patient care..."
-            ></textarea>
-            <p class="field-info">This description will be visible to patients on your profile</p>
+          <div class="stat-item">
+            <div class="stat-value">45</div>
+            <div class="stat-label">Total Patients</div>
           </div>
-          
-          <div class="photo-upload-section">
-            <div class="photo-preview" [ngStyle]="{'background-image': photoPreview ? 'url(' + photoPreview + ')' : 'none'}">
-              <span *ngIf="!photoPreview">No Photo</span>
-            </div>
-            <div class="photo-upload-controls">
-              <label for="photo-upload" class="upload-btn">Change Profile Photo</label>
-              <input type="file" id="photo-upload" accept="image/*" (change)="onPhotoSelected($event)" hidden>
-              <p class="field-info">Recommended: Square image, at least 300x300 pixels</p>
-            </div>
+          <div class="stat-item">
+            <div class="stat-value">4.8</div>
+            <div class="stat-label">Rating</div>
           </div>
-        </div>
-        
-        <div class="dashboard-card availability">
-          <h2>My Availability</h2>
-          
-          <div class="availability-tabs">
-            <button 
-              class="tab" 
-              [ngClass]="{'active': currentTab === 'today'}" 
-              (click)="changeTab('today')"
-            >Today</button>
-            <button 
-              class="tab" 
-              [ngClass]="{'active': currentTab === 'tomorrow'}" 
-              (click)="changeTab('tomorrow')"
-            >Tomorrow</button>
-            <button 
-              class="tab" 
-              [ngClass]="{'active': currentTab === 'custom'}" 
-              (click)="changeTab('custom')"
-            >Custom Date</button>
-          </div>
-          
-          <div class="custom-date-picker" *ngIf="currentTab === 'custom'">
-            <div class="date-input-container">
-              <label for="custom-date">Select Date:</label>
-              <input 
-                type="date" 
-                id="custom-date" 
-                class="date-input"
-                [(ngModel)]="customDate"
-                [min]="getMinDate()"
-                (change)="onCustomDateChange()"
-              >
-            </div>
-            <p class="selected-date-display" *ngIf="customDate">
-              Selected: {{ formatCustomDate() }}
-            </p>
-          </div>
-          
-          <!-- Time slots section - Shows slots based on selected tab -->
-          <div class="time-slots">
-            <div class="time-slot" *ngFor="let slot of getCurrentSlots(); let i = index">
-              <div class="time-range">
-                <input type="time" [(ngModel)]="getCurrentSlots()[i].startTime" class="time-input">
-                <span>to</span>
-                <input type="time" [(ngModel)]="getCurrentSlots()[i].endTime" class="time-input">
-              </div>
-              <button class="remove-slot-btn" *ngIf="getCurrentSlots().length > 1" (click)="removeTimeSlot(i)">✕</button>
-            </div>
-            <button class="add-slot-btn" (click)="addTimeSlot()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-              </svg>
-              Add Time Slot
-            </button>
-          </div>
-        </div>
-        
-        <div class="dashboard-card appointments">
-          <h2>Upcoming Appointments</h2>
-          
-          <div class="appointment-list">
-            <div class="appointment-item">
-              <div class="appointment-time">
-                <div class="time">09:00 AM</div>
-                <div class="date">Today</div>
-              </div>
-              <div class="appointment-details">
-                <div class="patient-name">John Smith</div>
-                <div class="appointment-type">General Checkup</div>
-              </div>
-              <div class="appointment-actions">
-                <button class="action-btn view">View</button>
-              </div>
-            </div>
-            
-            <div class="appointment-item">
-              <div class="appointment-time">
-                <div class="time">11:30 AM</div>
-                <div class="date">Today</div>
-              </div>
-              <div class="appointment-details">
-                <div class="patient-name">Sarah Johnson</div>
-                <div class="appointment-type">Follow-up</div>
-              </div>
-              <div class="appointment-actions">
-                <button class="action-btn view">View</button>
-              </div>
-            </div>
-            
-            <div class="appointment-item">
-              <div class="appointment-time">
-                <div class="time">02:15 PM</div>
-                <div class="date">Tomorrow</div>
-              </div>
-              <div class="appointment-details">
-                <div class="patient-name">Michael Brown</div>
-                <div class="appointment-type">Consultation</div>
-              </div>
-              <div class="appointment-actions">
-                <button class="action-btn view">View</button>
-              </div>
-            </div>
-          </div>
-          
-          <button class="view-all-btn">View All Appointments</button>
         </div>
       </div>
       
-      <div class="action-footer">
-        <button class="save-btn" (click)="saveChanges()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
-          </svg>
-          Save Changes
-        </button>
+      <div class="dashboard-card profile-form">
+        <h2>Professional Profile</h2>
+        <div class="form-group">
+          <label for="description">Professional Description</label>
+          <textarea 
+            id="description" 
+            rows="4" 
+            [(ngModel)]="doctorDto.description" 
+            placeholder="Describe your expertise, education, and approach to patient care..."
+          ></textarea>
+          <p class="field-info">This description will be visible to patients on your profile</p>
+        </div>
+        
+        <div class="photo-upload-section">
+          <div class="photo-preview" [ngStyle]="{'background-image': photoPreview ? 'url(' + photoPreview + ')' : 'none'}">
+            <span *ngIf="!photoPreview">No Photo</span>
+          </div>
+          <div class="photo-upload-controls">
+            <label for="photo-upload" class="upload-btn">Change Profile Photo</label>
+            <input type="file" id="photo-upload" accept="image/*">
+            <p class="field-info">Recommended: Square image, at least 300x300 pixels</p>
+          </div>
+        </div>
       </div>
-    </main>
-  </div>
+      
+      <div class="dashboard-card availability">
+        <h2>My Availability</h2>
+        
+        <!-- Date Picker Section -->
+        <div class="date-picker-section">
+          <div class="date-input-container">
+            <label for="selected-date">Select Date:</label>
+            <input 
+              type="date" 
+              id="selected-date" 
+              class="date-input"
+              [(ngModel)]="selectedDate"
+              [min]="getMinDate()"
+              (change)="onDateChange()"
+            >
+          </div>
+          <p class="selected-date-display" *ngIf="selectedDate">
+            Selected: {{ formatSelectedDate() }}
+          </p>
+        </div>
+        
+        <!-- Time slots section -->
+        <div class="time-slots">
+          <div class="time-slot" *ngFor="let slot of currentDateSlots; let i = index">
+            <div class="time-range">
+              <input type="time" [(ngModel)]="currentDateSlots[i].startTime" class="time-input">
+              <span>to</span>
+              <input type="time" [(ngModel)]="currentDateSlots[i].endTime" class="time-input">
+            </div>
+            <button class="remove-slot-btn" *ngIf="currentDateSlots.length > 1" (click)="removeTimeSlot(i)">✕</button>
+          </div>
+          <button class="add-slot-btn" (click)="addTimeSlot()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Add Time Slot
+          </button>
+        </div>
+      </div>
+      
+      <div class="dashboard-card appointments">
+        <h2>Upcoming Appointments</h2>
+        
+        <div class="appointment-list">
+          <div class="appointment-item">
+            <div class="appointment-time">
+              <div class="time">09:00 AM</div>
+              <div class="date">Today</div>
+            </div>
+            <div class="appointment-details">
+              <div class="patient-name">John Smith</div>
+              <div class="appointment-type">General Checkup</div>
+            </div>
+            <div class="appointment-actions">
+              <button class="action-btn view">View</button>
+            </div>
+          </div>
+          
+          <div class="appointment-item">
+            <div class="appointment-time">
+              <div class="time">11:30 AM</div>
+              <div class="date">Today</div>
+            </div>
+            <div class="appointment-details">
+              <div class="patient-name">Sarah Johnson</div>
+              <div class="appointment-type">Follow-up</div>
+            </div>
+            <div class="appointment-actions">
+              <button class="action-btn view">View</button>
+            </div>
+          </div>
+          
+          <div class="appointment-item">
+            <div class="appointment-time">
+              <div class="time">02:15 PM</div>
+              <div class="date">Tomorrow</div>
+            </div>
+            <div class="appointment-details">
+              <div class="patient-name">Michael Brown</div>
+              <div class="appointment-type">Consultation</div>
+            </div>
+            <div class="appointment-actions">
+              <button class="action-btn view">View</button>
+            </div>
+          </div>
+        </div>
+        
+        <button class="view-all-btn">View All Appointments</button>
+      </div>
+    </div>
+    
+    <div class="action-footer">
+      <button class="save-btn" (click)="saveChanges()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+        </svg>
+        Save Changes
+      </button>
+    </div>
+  </main>
+</div>
   `,
   styles: [`
     /* Modern Dashboard Layout */
@@ -853,15 +836,12 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   photoFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
 
-  // Current selected tab
-  currentTab: 'today' | 'tomorrow' | 'custom' = 'today';
-  
-  // Custom date properties
-  customDate: string = '';
-  customDateSlots: Array<{ startTime: string, endTime: string }> = [];
+  // Selected date and its time slots
+  selectedDate: string = '';
+  currentDateSlots: Array<{ startTime: string, endTime: string }> = [];
   
   // Store availability for different dates (key: date in YYYY-MM-DD format, value: time slots)
-  customDatesAvailability: { [date: string]: Array<{ startTime: string, endTime: string }> } = {};
+  datesAvailability: { [date: string]: Array<{ startTime: string, endTime: string }> } = {};
 
   doctorDto: any = {
     doctorId: 0,
@@ -874,14 +854,6 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     description: ''
   };
   
-  todaySlots: Array<{ startTime: string, endTime: string }> = [
-    { startTime: '09:00', endTime: '12:00' }
-  ];
-  
-  tomorrowSlots: Array<{ startTime: string, endTime: string }> = [
-    { startTime: '09:00', endTime: '12:00' }
-  ];
-  
   constructor(
     private doctorService: DoctorService,
     private authService: AuthService,
@@ -892,10 +864,10 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadDoctorProfile();
     
-    // Initialize custom date as tomorrow's date
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 2); // Start with day after tomorrow for custom date default
-    this.customDate = this.formatDateForInput(tomorrow);
+    // Initialize selected date as today's date
+    const today = new Date();
+    this.selectedDate = this.formatDateForInput(today);
+    this.onDateChange();
   }
   
   ngOnDestroy(): void {
@@ -911,19 +883,6 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
   }
   
-  // Change the current tab
-  changeTab(tab: 'today' | 'tomorrow' | 'custom'): void {
-    this.currentTab = tab;
-    
-    if (tab === 'custom' && !this.customDate) {
-      // Set a default date if none is selected
-      const defaultDate = new Date();
-      defaultDate.setDate(defaultDate.getDate() + 2); // Default to day after tomorrow
-      this.customDate = this.formatDateForInput(defaultDate);
-      this.onCustomDateChange();
-    }
-  }
-  
   // Format date for date input (YYYY-MM-DD)
   formatDateForInput(date: Date): string {
     const year = date.getFullYear();
@@ -937,11 +896,11 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     return this.formatDateForInput(new Date());
   }
   
-  // Format custom date for display
-  formatCustomDate(): string {
-    if (!this.customDate) return '';
+  // Format selected date for display
+  formatSelectedDate(): string {
+    if (!this.selectedDate) return '';
     
-    const date = new Date(this.customDate);
+    const date = new Date(this.selectedDate);
     return date.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 
@@ -950,34 +909,20 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     });
   }
   
-  // Handle custom date change
-  onCustomDateChange(): void {
-    if (!this.customDate) return;
+  // Handle date change
+  onDateChange(): void {
+    if (!this.selectedDate) return;
     
     // Check if we already have slots for this date
-    if (!this.customDatesAvailability[this.customDate]) {
+    if (!this.datesAvailability[this.selectedDate]) {
       // Initialize with default slot
-      this.customDatesAvailability[this.customDate] = [
+      this.datesAvailability[this.selectedDate] = [
         { startTime: '09:00', endTime: '17:00' }
       ];
     }
     
-    // Update custom date slots reference
-    this.customDateSlots = this.customDatesAvailability[this.customDate];
-  }
-  
-  // Get current slots based on selected tab
-  getCurrentSlots(): Array<{ startTime: string, endTime: string }> {
-    switch(this.currentTab) {
-      case 'today':
-        return this.todaySlots;
-      case 'tomorrow':
-        return this.tomorrowSlots;
-      case 'custom':
-        return this.customDateSlots;
-      default:
-        return this.todaySlots;
-    }
+    // Update current date slots reference
+    this.currentDateSlots = this.datesAvailability[this.selectedDate];
   }
   
   loadDoctorProfile(): void {
@@ -997,22 +942,13 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
           description: data.description || ''
         };
         
-        // Load availability if there is any
-        if (data.todayAvailability && data.todayAvailability.length > 0) {
-          this.todaySlots = data.todayAvailability;
-        }
-        
-        if (data.tomorrowAvailability && data.tomorrowAvailability.length > 0) {
-          this.tomorrowSlots = data.tomorrowAvailability;
-        }
-        
-        // Load custom dates availability if there is any
-        if (data.customDatesAvailability) {
-          this.customDatesAvailability = data.customDatesAvailability;
+        // Load dates availability if there is any
+        if (data.datesAvailability) {
+          this.datesAvailability = data.datesAvailability;
           
-          // Initialize custom date slots if there's a selected date
-          if (this.customDate && this.customDatesAvailability[this.customDate]) {
-            this.customDateSlots = this.customDatesAvailability[this.customDate];
+          // Initialize current date slots if there's a selected date
+          if (this.selectedDate && this.datesAvailability[this.selectedDate]) {
+            this.currentDateSlots = this.datesAvailability[this.selectedDate];
           }
         }
         
@@ -1039,93 +975,76 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   
   addTimeSlot(): void {
     const newSlot = { startTime: '09:00', endTime: '17:00' };
-    this.getCurrentSlots().push(newSlot);
+    this.currentDateSlots.push(newSlot);
   }
   
   removeTimeSlot(index: number): void {
-    this.getCurrentSlots().splice(index, 1);
+    this.currentDateSlots.splice(index, 1);
   }
   
-  saveChanges(): void {
-    // Create form data to send photo and other information
-    const formData = new FormData();
-
-    // Collect all availability data
-    const availabilityData = {
-      todayAvailability: this.todaySlots,
-      tomorrowAvailability: this.tomorrowSlots,
-      customDatesAvailability: this.customDatesAvailability
-    };
-
-    // Add doctor information as JSON string
-    const doctorData = {
-      ...this.doctorDto,
-      ...availabilityData
-    };
-    
-    if (this.photoFile) {
-      formData.append('photo', this.photoFile);
-    }
-    
-    formData.append('doctorData', JSON.stringify(doctorData));
-    
-    this.doctorService.updateDoctorProfileWithPhoto(doctorData, this.photoFile || undefined).subscribe({
-      next: (response) => {
-        // Show success message
-        const successMessage = document.createElement('div');
-        successMessage.className = 'success-toast';
-        successMessage.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
-          </svg>
-          <span>Your profile has been successfully updated!</span>
-        `;
-        document.body.appendChild(successMessage);
-        
-        // Remove the message after 3 seconds
-        setTimeout(() => {
-          document.body.removeChild(successMessage);
-        }, 3000);
-      },
-      error: (error) => {
-        console.error('Error updating doctor information:', error);
-        
-        // Show error message
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-toast';
-        errorMessage.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-          </svg>
-          <span>Failed to update your profile. Please try again.</span>
-        `;
-        document.body.appendChild(errorMessage);
-        
-        // Remove the message after 3 seconds
-        setTimeout(() => {
-          document.body.removeChild(errorMessage);
-        }, 3000);
-      }
-    });
-  }
   
-  onPhotoSelected(event: Event): void {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files[0]) {
-      const file = fileInput.files[0];
-      this.photoFile = file;
-      
-      // Create a preview of the selected image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.photoPreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+
   
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  saveChanges(): void {
+    const doctorData = {
+      ...this.doctorDto,
+      selectedDate: this.selectedDate,        // The currently selected date
+      timeSlots: this.currentDateSlots       // The time slots for the selected date
+    };
+  
+    this.doctorService.updateDoctorProfile(doctorData).subscribe({
+      next: (updatedData) => {
+        // Update the UI with the response
+        this.showToast('Profile updated successfully', 'success');
+        
+        // If there's updated availability data, refresh it
+        if (updatedData.timeSlots && this.selectedDate) {
+          this.datesAvailability[this.selectedDate] = updatedData.timeSlots;
+          this.currentDateSlots = [...this.datesAvailability[this.selectedDate]];
+        }
+      },
+      error: (error) => {
+        this.showToast('Failed to update profile. Please try again.', 'error');
+      }
+    });
+  }
+  
+  // Helper methods for availability
+  private getTodayAvailability(): Array<{ startTime: string, endTime: string }> {
+    const today = this.formatDateForInput(new Date());
+    return this.datesAvailability[today] || [];
+  }
+  
+  private getTomorrowAvailability(): Array<{ startTime: string, endTime: string }> {
+    const tomorrow = this.formatDateForInput(new Date(Date.now() + 86400000)); // +1 day in ms
+    return this.datesAvailability[tomorrow] || [];
+  }
+  
+  private mapTimeSlots(slots: any[]): Array<{ startTime: string, endTime: string }> {
+    return slots.map(slot => ({
+      startTime: slot.startTime,
+      endTime: slot.endTime
+    }));
+  }
+  
+  // Add a toast message system
+  private showToast(message: string, type: 'success' | 'error'): void {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = type === 'success' ? 'success-toast' : 'error-toast';
+    toast.textContent = message;
+    
+    // Append to document
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
   }
 }

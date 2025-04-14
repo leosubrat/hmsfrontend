@@ -60,7 +60,6 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
                 <span>{{ getInitials(doctor) }}</span>
               </div>
             </div>
-            
             <div class="doctor-info">
               <h3>{{ getFullName(doctor) }}</h3>
               <div class="specialty-badge">{{ doctor.expertise }}</div>
@@ -80,18 +79,17 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
                   <span>Top Rated</span>
                 </div>
               </div>
+
+              <!-- License Number -->
+              <div class="license-number">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M22 3H2C.9 3 0 3.9 0 5v14c0 1.1.9 2 2 2h20c1.1 0 1.99-.9 1.99-2L24 5c0-1.1-.9-2-2-2zm0 16H2V5h20v14zM21 6h-7v5h7V6zm-1 2h-5v1h5V8zm0-1h-5v1h5V7zM8 12.5c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM5 17h11c0-1.5-1.6-3-4-3h-3c-2.4 0-4 1.5-4 3z"/>
+                </svg>
+                <span>License: {{ doctor.licenseNumber }}</span>
+              </div>
               
               <div class="description" *ngIf="doctor.description">
                 <p>{{ truncateDescription(doctor.description, 120) }}</p>
-              </div>
-              
-              <div class="availability">
-                <span class="availability-icon available">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                </span>
-                <span>Available Today</span>
               </div>
               
               <button class="book-appointment-btn" (click)="bookAppointment(doctor)">
@@ -308,6 +306,24 @@ import { AppointmentFormComponent } from '../appointment-form/appointment-form.c
       opacity: 0.7;
     }
     
+    /* License Number Styles */
+    .license-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #616161;
+      font-size: 14px;
+      margin-bottom: 16px;
+      padding: 8px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    
+    .license-number svg {
+      opacity: 0.7;
+    }
+    
     .description {
       margin: 16px 0;
       color: #666;
@@ -427,9 +443,9 @@ export class DoctorListComponent implements OnInit {
     return description.substring(0, maxLength) + '...';
   }
 
-  bookAppointment(doctor: any): void {
+  bookAppointment(doctor: DoctorDto): void {
     this.selectedDoctor = {
-      id: doctor.id,
+      id: doctor.doctorId,
       name: `Dr. ${doctor.firstName} ${doctor.lastName}`,
       specialty: doctor.expertise
     };

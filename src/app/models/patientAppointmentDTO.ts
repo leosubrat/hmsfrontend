@@ -10,6 +10,5 @@ export interface PatientAppointmentDTO {
     doctorId: number;
     doctorName: string;
     doctorSpecialty: string;
-    doctorLiscenceNo:string;
-
+    licenseNumber:string;
   }

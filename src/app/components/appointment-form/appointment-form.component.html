@@ -1,15 +1,12 @@
-<!-- appointment-form.component.html -->
 <div class="modal-backdrop">
   <div class="modal-dialog">
     <div class="modal-content">
-      <!-- Header -->
       <div class="modal-header">
         <h2 class="modal-title">Book Appointment</h2>
         <p class="modal-subtitle">with {{ doctorName }} • {{ doctorSpecialty }}</p>
         <button type="button" class="close-button" (click)="close()" aria-label="Close">×</button>
       </div>
 
-      <!-- Status message after submit -->
       @if (submitStatus) {
         <div class="modal-body status-message" [ngClass]="submitStatus.success ? 'success' : 'error'">
           <div class="status-icon">{{ submitStatus.success ? '✓' : '✗' }}</div>
@@ -56,7 +53,15 @@
               }
             </div>
           </div>
-
+          <div class="form-group">
+            <label for="licenseNumber">Doctor License Number</label>
+            <input 
+              type="text" 
+              id="licenseNumber" 
+              formControlName="licenseNumber"
+              class="form-control"
+            >
+          </div>
           <div class="form-row">
             <div class="form-group">
               <label for="patientEmail">Email</label>
@@ -87,7 +92,6 @@
             </div>
           </div>
           
-          <!-- Doctor selection dropdown -->
           <div class="form-group">
             <label for="doctorId">Select Doctor</label>
             <select 
@@ -176,7 +180,7 @@
 
           <div class="form-actions">
             <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting" routerLink="/patient/book/appointment">
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
               {{ isSubmitting ? 'Booking...' : 'Book Appointment' }} 
             </button>
           </div>

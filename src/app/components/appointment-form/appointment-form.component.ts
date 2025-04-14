@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DoctorService } from '../../services/doctor/doctor.service';
 import { DoctorDto } from '../../models/doctor.model';
-import { UserService } from '../../services/user.service'; // Import the user service
+import { UserService } from '../../services/user.service'; 
+import { PatientAppointmentService } from '../../services/appointment/ patient-appointment.service';
 
 @Component({
   selector: 'app-appointment-form',
@@ -31,7 +32,8 @@ export class AppointmentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private doctorService: DoctorService,
-    private userService: UserService // Inject user service
+    private userService: UserService,
+    private appointmentService: PatientAppointmentService // Inject appointment service
   ) {
     // Set minimum date to today
     const today = new Date();
@@ -48,18 +50,14 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form with separate first and last name fields
     this.initForm();
     
-    // Load doctors
     this.loadDoctors();
     
-    // Pre-select doctor if provided
     if (this.doctorId) {
       this.appointmentForm.patchValue({ doctorId: this.doctorId });
     }
     
-    // Load user details to pre-populate the form
     this.loadUserDetails();
   }
 
@@ -94,7 +92,6 @@ export class AppointmentFormComponent implements OnInit {
     
     this.userService.getUserDetails().subscribe({
       next: (userData) => {
-        // Pre-populate the form with user data
         this.appointmentForm.patchValue({
           firstName: userData.firstName,
           lastName: userData.lastName,
@@ -118,19 +115,16 @@ export class AppointmentFormComponent implements OnInit {
 
     this.isSubmitting = true;
     
-    // Format the appointment data
     const formData = this.appointmentForm.value;
     
-    // Combine first and last name for backend if needed
     const patientName = `${formData.firstName} ${formData.lastName}`;
     
-    // Get selected doctor info
     const selectedDoctor = this.doctors.find(doc => doc.doctorId === formData.doctorId);
     const doctorName = selectedDoctor ? 
       `Dr. ${selectedDoctor.firstName} ${selectedDoctor.lastName}` : '';
     const doctorSpecialty = selectedDoctor?.expertise || '';
-    
-    // Create appointment DTO
+    const licenseNumber = selectedDoctor?.licenseNumber || '';
+
     const appointmentDTO = {
       patientName,
       patientEmail: formData.patientEmail,
@@ -138,27 +132,38 @@ export class AppointmentFormComponent implements OnInit {
       doctorId: formData.doctorId,
       doctorName,
       doctorSpecialty,
+      licenseNumber, // This was missing
       appointmentDate: formData.appointmentDate,
       appointmentTime: formData.appointmentTime,
       reasonForVisit: formData.reasonForVisit,
       insurance: formData.insurance,
-      isNewPatient: formData.isNewPatient
+      isNewPatient: formData.isNewPatient,
+      doctorLis:formData.insuramce
     };
     
-    // Call your appointment service to save the appointment
-    // For now, simulate a successful API call
-    setTimeout(() => {
-      this.submitStatus = { 
-        success: true, 
-        message: 'Appointment booked successfully!' 
-      };
-      this.isSubmitting = false;
-      
-      // Close the modal after 3 seconds
-      setTimeout(() => {
-        this.close();
-      }, 3000);
-    }, 1500);
+    // Call the appointment service to save the appointment
+    this.appointmentService.savePatientAppointment(appointmentDTO).subscribe({
+      next: (response) => {
+        this.submitStatus = { 
+          success: true, 
+          message: 'Appointment booked successfully!' 
+        };
+        this.isSubmitting = false;
+        
+        // Close the modal after 3 seconds
+        setTimeout(() => {
+          this.close();
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Error saving appointment:', error);
+        this.submitStatus = { 
+          success: false, 
+          message: 'Failed to book appointment. Please try again.' 
+        };
+        this.isSubmitting = false;
+      }
+    });
   }
 
   close(): void {
