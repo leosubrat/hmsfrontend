@@ -10,11 +10,12 @@ import { UserDashboardComponent } from './components/patient/user-dashboard.comp
 import { AppointmentFormComponent } from './components/appointment-form/appointment-form.component';
 import { AppointmentListComponent } from './components/appointment-form/appointment-list.component';
 import { UserProfileComponent } from './components/patient/user-profile.component';
+import { AdminDashboardComponent } from './components/admin/admin.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: LoginComponent
   },
   {
     path: 'auth/signup',
@@ -46,6 +47,11 @@ export const routes: Routes = [
   {
     path: 'user/dashboard',
     component: UserDashboardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboardComponent,
     canActivate: [AuthGuard]
   },
   {

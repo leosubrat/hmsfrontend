@@ -514,6 +514,10 @@ export class LoginComponent {
             console.log('Redirecting to user dashboard');
             this.router.navigate(['/user/dashboard']);
           } 
+          else if (this.authService.isAdmin()) {
+            console.log('Redirecting to Admin dashboard');
+            this.router.navigate(['/admin/dashboard']);
+          } 
           else {
             console.log('Redirecting to home');
             this.router.navigate(['/']);

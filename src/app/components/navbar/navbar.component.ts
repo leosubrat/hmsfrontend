@@ -18,11 +18,8 @@ import { AuthService } from '../../services/auth.service';
       </div>
       
       <ul class="nav-links">
-        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
-        <li><a routerLink="/about" routerLinkActive="active">About</a></li>
         <li><a routerLink="/services" routerLinkActive="active">Services</a></li>
         <li><a routerLink="/doctors" routerLinkActive="active">Doctors</a></li>
-        <li><a routerLink="/contact" routerLinkActive="active">Contact</a></li>
       </ul>
       
       <!-- Login button - ONLY shown when NOT logged in -->

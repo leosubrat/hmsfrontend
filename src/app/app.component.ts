@@ -16,7 +16,7 @@ import { filter } from 'rxjs/operators';
       <main class="content" [ngClass]="{'no-padding': !showNavbar}">
         <router-outlet></router-outlet>
       </main>
-      <app-footer></app-footer>
+      <!-- <app-footer></app-footer> -->
     </div>
   `,
   styles: [`
@@ -58,7 +58,8 @@ export class AppComponent implements OnInit {
       '/get/user/profile',
       '/get/all/appointment',
       '/patient/book/appointment',
-      '/doctor/dashboard'
+      '/doctor/dashboard',
+      '/admin/dashboard'
     ];
     
     // Check if the current URL matches any of these routes
