@@ -1,219 +1,487 @@
-/* appointment-form.component.scss */
+/* Modal styles */
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-    padding: 1rem;
-  }
-  
-  .modal-dialog {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .modal-content {
-    background-color: #fff;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-  }
-  
-  .modal-header {
-    background-color: #4db6ac;
-    color: white;
-    padding: 1rem;
-    position: relative;
-  
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0;
-    }
-  
-    .modal-subtitle {
-      font-size: 0.875rem;
-      margin: 0.25rem 0 0;
-      opacity: 0.9;
-    }
-  
-    .close-button {
-      position: absolute;
-      top: 0.5rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      line-height: 1;
-    }
-  }
-  
-  .modal-body {
-    padding: 1.5rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-  
-    label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 0.25rem;
-    }
-  
-    &.checkbox {
-      display: flex;
-      align-items: center;
-      
-      input {
-        margin-right: 0.5rem;
-      }
-      
-      label {
-        margin-bottom: 0;
-      }
-    }
-  }
-  
-  .form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  
-    .form-group {
-      flex: 1;
-      margin-bottom: 0;
-    }
-  }
-  
-  .form-control {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  
-    &:focus {
-      border-color: #4db6ac;
-      outline: none;
-      box-shadow: 0 0 0 0.2rem rgba(77, 182, 172, 0.25);
-    }
-  
-    &.is-invalid {
-      border-color: #dc3545;
-      
-      &:focus {
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-      }
-    }
-  }
-  
-  .error-message {
-    color: #dc3545;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-  }
-  
-  .form-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
-  }
-  
-  .btn {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-  
-    &.btn-primary {
-      background-color: #4db6ac;
-      border-color: #4db6ac;
-      color: white;
-  
-      &:hover:not(:disabled) {
-        background-color: #3da59b;
-        border-color: #3da59b;
-      }
-  
-      &:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-      }
-    }
-  
-    &.btn-secondary {
-      background-color: #f8f9fa;
-      border-color: #ccc;
-      color: #333;
-  
-      &:hover {
-        background-color: #e9ecef;
-        border-color: #bbb;
-      }
-    }
-  }
-  
-  .status-message {
-    text-align: center;
-    padding: 2rem;
-  
-    &.success {
-      color: #28a745;
-    }
-  
-    &.error {
-      color: #dc3545;
-    }
-  
-    .status-icon {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-  
-    p {
-      font-size: 1.125rem;
-      margin: 0;
-    }
-  }
-  /* Add this to your appointment-form.component.css file */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 550px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  position: relative;
+}
+
+.modal-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #212529;
+}
+
+.modal-subtitle {
+  margin-bottom: 0;
+  color: #6c757d;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Form styles */
+.form-row {
+  display: flex;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox input {
+  margin-right: 0.5rem;
+  width: auto;
+}
+
+.checkbox label {
+  margin-bottom: 0;
+}
+
+/* Status messages */
+.status-message {
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.status-message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+/* Error messages */
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.info-message {
+  color: #17a2b8;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.warning-message {
+  color: #ffc107;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Loading indicator */
 .loading-user-data {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: #e8f5f4;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 14px;
-  color: #0d8f84;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .spinner-sm {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(13, 143, 132, 0.2);
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0.2rem solid rgba(0, 0, 0, 0.1);
+  border-top-color: #007bff;
   border-radius: 50%;
-  border-top-color: #0d8f84;
-  animation: spin 1s linear infinite;
+  animation: spinner 0.8s linear infinite;
+  margin-right: 0.5rem;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Custom Date Input Styling */
+.date-wrapper {
+  position: relative;
+}
+
+/* Color indicator and legend for date availability */
+.date-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.available-date-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #28a745;
+  margin-right: 5px;
+}
+
+.unavailable-date-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #dc3545;
+  margin-right: 5px;
+}
+
+/* Custom Date Input Styling */
+.custom-date-input {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Add a script to inject custom styling for the date picker using JS */
+/* This script will run when the component is initialized to style the date picker */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+:host {
+  --highlight-available-bg: rgba(40, 167, 69, 0.2);
+  --highlight-unavailable-bg: rgba(220, 53, 69, 0.1);
+}
+
+/* Calendar customization attempt - note this relies on JS implementation */
+.date-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.1);
+  z-index: 1060;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.custom-calendar {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 16px;
+  width: 300px;
+  max-width: 90vw;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.calendar-month {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.calendar-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.calendar-nav-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-name {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.calendar-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendar-date:hover {
+  background-color: #f0f0f0;
+}
+
+.calendar-date.available {
+  background-color: rgba(40, 167, 69, 0.2);
+  font-weight: 500;
+}
+
+.calendar-date.unavailable {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #6c757d;
+}
+
+.calendar-date.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.calendar-date.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Create a custom solution for highlighting dates in the native date input */
+.date-input-wrapper {
+  position: relative;
+}
+
+/* This will be used by our Angular component to apply custom styles */
+:host ::ng-deep input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+}
+
+/* Custom calendar date highlight styles */
+.custom-calendar-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  display: none;
+}
+
+.custom-calendar-container.visible {
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .form-actions .btn {
+    margin-bottom: 0.5rem;
+  }
+  .available-dates-hint {
+    margin-top: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .date-badge {
+    display: inline-block;
+    background-color: #e7f5e9;
+    color: #28a745;
+    border-radius: 12px;
+    padding: 3px 8px;
+    margin: 0 2px;
+    font-weight: 500;
+  }
+  
+  .available-date-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #28a745;
+    margin-right: 5px;
+  }
 }

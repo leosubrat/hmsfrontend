@@ -8,11 +8,12 @@ import { AuthService } from '../../../services/auth.service';
 import { DoctorService } from '../../../services/doctor/doctor.service';
 import { DoctorNotificationComponent } from '../../doctor-notification/doctor-notification.component';
 import { DoctorNotificationService } from '../../doctor-notification/doctor-notification.service';
+import { AppointmentListComponent } from "../../appointment-form/appointment-list.component";
 
 @Component({
   selector: 'app-doctor-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DoctorNotificationComponent],
+  imports: [CommonModule, FormsModule, DoctorNotificationComponent, AppointmentListComponent],
   template: `
  <div class="dashboard-wrapper">
   <aside class="sidebar">
@@ -92,7 +93,7 @@ import { DoctorNotificationService } from '../../doctor-notification/doctor-noti
           </div>
         </div>
       </div>
-      
+      <app-appointment-list></app-appointment-list>>
       <div class="dashboard-card profile-form">
         <h2>Professional Profile</h2>
         <div class="form-group">

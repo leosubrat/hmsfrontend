@@ -2,7 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserDto, UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
+import { UserDto } from '../../models/doctor.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -448,7 +449,8 @@ export class UserProfileComponent implements OnInit {
     phone: '',
     firstName: '',
     middleName: '',
-    lastName: ''
+    lastName: '',
+    doctorAvailabilities: []  
   };
   
   loading = false;

@@ -8,9 +8,9 @@ import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard/d
 import { AuthGuard } from './guards/auth.guard';
 import { UserDashboardComponent } from './components/patient/user-dashboard.component';
 import { AppointmentFormComponent } from './components/appointment-form/appointment-form.component';
-import { AppointmentListComponent } from './components/appointment-form/appointment-list.component';
 import { UserProfileComponent } from './components/patient/user-profile.component';
 import { AdminDashboardComponent } from './components/admin/admin.component';
+import { AppointmentListComponent } from './components/appointment-form/appointment-list.component';
 
 export const routes: Routes = [
   {

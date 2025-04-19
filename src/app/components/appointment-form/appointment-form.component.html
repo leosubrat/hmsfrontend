@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Book Appointment</h2>
-        <p class="modal-subtitle">with {{ doctorName }} • {{ doctorSpecialty }}</p>
+        <p class="modal-subtitle">with {{ doctorName ? doctorName : 'Selected Doctor' }} • {{ doctorSpecialty }}</p>
         <button type="button" class="close-button" (click)="close()" aria-label="Close">×</button>
       </div>
 
@@ -53,15 +53,7 @@
               }
             </div>
           </div>
-          <!-- <div class="form-group">
-            <label for="licenseNumber">Doctor License Number</label>
-            <input 
-              type="text" 
-              id="licenseNumber" 
-              formControlName="licenseNumber"
-              class="form-control"
-            >
-          </div> -->
+          
           <div class="form-row">
             <div class="form-group">
               <label for="patientEmail">Email</label>
@@ -113,14 +105,26 @@
           <div class="form-row">
             <div class="form-group">
               <label for="appointmentDate">Date</label>
-              <input 
-                type="date" 
-                id="appointmentDate" 
-                formControlName="appointmentDate"
-                class="form-control"
-                [min]="minDate"
-                [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}"
-              >
+              <div class="date-wrapper">
+                <input 
+                  #dateInput
+                  type="date" 
+                  id="appointmentDate" 
+                  formControlName="appointmentDate"
+                  class="form-control custom-date-input"
+                  [min]="minDate"
+                  [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}"
+                  (click)="onDateInputClick()"
+                >
+                <div class="available-dates-hint">
+                  <span class="legend-item">
+                    <span class="available-date-dot"></span> Available dates: 
+                    @for (date of availableDates; track date) {
+                      <span class="date-badge">{{ formatDisplayDate(date) }}</span>
+                    }
+                  </span>
+                </div>
+              </div>
               @if (appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched) {
                 <div class="error-message">Date is required</div>
               }
@@ -129,17 +133,21 @@
             <div class="form-group">
               <label for="appointmentTime">Time</label>
               <select 
-                id="appointmentTime" 
-                formControlName="appointmentTime"
-                class="form-control"
-                [ngClass]="{'is-invalid': appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched}"
-              >
-                <option value="">Select time</option>
-                @for (time of timeSlots; track time) {
-                  <option [value]="time">{{ time }}</option>
-                }
-              </select>
-              @if (appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched) {
+              id="appointmentTime" 
+              formControlName="appointmentTime"
+              class="form-control"
+              [ngClass]="{'is-invalid': appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched}"
+            >
+              <option value="">Select time</option>
+              @for (time of availableTimeSlots; track time) {
+                <option [value]="time">{{ time }}</option>
+              }
+            </select>
+              @if (!selectedDate) {
+                <div class="info-message">Please select a date first</div>
+              } @else if (availableTimeSlots.length === 0) {
+                <div class="warning-message">No available time slots for selected date</div>
+              } @else if (appointmentForm.get('appointmentTime')?.invalid && appointmentForm.get('appointmentTime')?.touched) {
                 <div class="error-message">Time is required</div>
               }
             </div>
@@ -180,7 +188,7 @@
 
           <div class="form-actions">
             <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || appointmentForm.invalid">
               {{ isSubmitting ? 'Booking...' : 'Book Appointment' }} 
             </button>
           </div>

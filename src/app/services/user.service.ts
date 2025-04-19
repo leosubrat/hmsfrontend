@@ -3,14 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environments } from '../../environments/environment';
-
-export interface UserDto {
-  email: string;
-  phone: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
+import { UserDto } from '../models/doctor.model';
 
 @Injectable({
   providedIn: 'root'

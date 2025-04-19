@@ -16,3 +16,22 @@ export interface User {
     photo: string; 
     licenseNumber:string;
   }
+  export interface DoctorAvailability {
+    id: number;
+    doctorId: number;
+    date: string;
+    startTime: string;
+    endTime: string;
+  }
+  
+  // Update UserDto model to include doctorAvailabilities
+  
+  export interface UserDto {
+    userId?: number | null;
+    firstName: string;
+    middleName?: string | null;
+    lastName: string;
+    email: string;
+    phone: string;
+    doctorAvailabilities: DoctorAvailability[];
+  }
