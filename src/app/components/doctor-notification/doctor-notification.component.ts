@@ -1,98 +1,117 @@
-// src/app/components/doctor-notification/doctor-notification.component.ts
+// doctor-notification.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DoctorNotificationService } from './doctor-notification.service';
-import { PatientAppointmentService } from '../../services/appointment/ patient-appointment.service';
+import { HttpClient } from '@angular/common/http';
+import { environments } from '../../../environments/environment';
 
+interface PatientAppointment {
+  id: number;
+  patientName: string;
+  patientEmail: string;
+  patientPhone: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  reasonForVisit: string;
+  insurance: string;
+  doctorId: number;
+  doctorName: string;
+  doctorSpecialty: string;
+  newPatient: boolean;
+}
 
 @Component({
   selector: 'app-doctor-notification',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="notification-container">
-      <div class="notification-bell" (click)="togglePatientList()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
-        </svg>
-        <span class="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
-      </div>
-      
-      <!-- Patient list popup -->
-      <div class="patient-list-modal" *ngIf="showPatientList">
-        <div class="patient-list-content">
-          <div class="modal-header">
-            <h3>Patient Appointment Requests</h3>
-            <button class="close-btn" (click)="closePatientList()">×</button>
-          </div>
-          
-          <div class="patients-container">
-            <div *ngIf="loading" class="loading-spinner">
-              <div class="spinner"></div>
-              <p>Loading patient appointments...</p>
-            </div>
-            
-            <div *ngIf="!loading && patients.length === 0" class="no-patients">
-              No pending appointment requests
-            </div>
-            
-            <div *ngIf="!loading && patients.length > 0" class="patient-cards">
-              <div *ngFor="let patient of patients" class="patient-card">
-                <div class="patient-info">
-                  <div class="avatar">{{ getInitials(patient.patientName) }}</div>
-                  <div class="details">
-                    <h4>{{ patient.patientName }}</h4>
-                    <p><strong>Date:</strong> {{ formatDate(patient.appointmentDate) }}</p>
-                    <p><strong>Time:</strong> {{ patient.appointmentTime }}</p>
-                    <p><strong>Reason:</strong> {{ patient.reasonForVisit }}</p>
-                    <p *ngIf="patient.isNewPatient" class="new-tag">New Patient</p>
-                  </div>
-                </div>
-                <div class="contact-info">
-                  <p><strong>Email:</strong> {{ patient.patientEmail }}</p>
-                  <p><strong>Phone:</strong> {{ patient.patientPhone }}</p>
-                </div>
-                <div class="actions" *ngIf="patient.status === 'PENDING'">
-                  <button class="decline-btn" (click)="updateStatus(patient.id, 'DECLINED')">Decline</button>
-                  <button class="approve-btn" (click)="updateStatus(patient.id, 'APPROVED')">Approve</button>
-                </div>
-                <div class="status-badge" [ngClass]="patient.status.toLowerCase()" *ngIf="patient.status !== 'PENDING'">
-                  {{ patient.status }}
-                </div>
+    <div class="notification-bell" (click)="toggleAppointmentModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
+      </svg>
+      <span class="notification-count" *ngIf="appointmentRequests.length > 0">
+        {{ appointmentRequests.length }}
+      </span>
+    </div>
+
+    <!-- Appointment Request Modal -->
+    <div class="modal-overlay" *ngIf="showAppointmentModal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2>Patient Appointment Requests</h2>
+          <button class="close-button" (click)="toggleAppointmentModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div *ngFor="let appointment of appointmentRequests" class="appointment-card">
+            <div class="patient-header">
+              <div class="patient-avatar">
+                {{ getInitials(appointment.patientName) }}
+              </div>
+              <div class="patient-name">
+                <h3>{{ appointment.patientName }}</h3>
               </div>
             </div>
+
+            <div class="appointment-details">
+              <div class="detail-row">
+                <strong>Date:</strong> {{ formatDate(appointment.appointmentDate) }}
+              </div>
+              <div class="detail-row">
+                <strong>Time:</strong> {{ appointment.appointmentTime }}
+              </div>
+              <div class="detail-row">
+                <strong>Reason:</strong> {{ appointment.reasonForVisit }}
+              </div>
+            </div>
+
+            <div class="patient-contact">
+              <div class="detail-row">
+                <strong>Email:</strong> {{ appointment.patientEmail }}
+              </div>
+              <div class="detail-row">
+                <strong>Phone:</strong> {{ appointment.patientPhone }}
+              </div>
+            </div>
+
+            <div class="appointment-actions">
+              <button class="decline-button" (click)="handleAppointment(appointment.id, 'DECLINED')">
+                Decline
+              </button>
+              <button class="approve-button" (click)="handleAppointment(appointment.id, 'APPROVED')">
+                Approve
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="appointmentRequests.length === 0" class="no-appointments">
+            No pending appointment requests
           </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    .notification-container {
-      position: relative;
-    }
-    
     .notification-bell {
       position: relative;
       cursor: pointer;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background-color: #f5f5f5;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.2s;
+      border-radius: 50%;
+      background-color: #f5f5f5;
     }
-    
+
     .notification-bell:hover {
       background-color: #e0e0e0;
     }
-    
-    .notification-badge {
+
+    .notification-count {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: #f44336;
+      background-color: #e53935;
       color: white;
       border-radius: 50%;
       width: 20px;
@@ -102,9 +121,8 @@ import { PatientAppointmentService } from '../../services/appointment/ patient-a
       align-items: center;
       justify-content: center;
     }
-    
-    /* Patient list modal */
-    .patient-list-modal {
+
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -115,26 +133,20 @@ import { PatientAppointmentService } from '../../services/appointment/ patient-a
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      animation: fadeIn 0.2s ease-out;
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .patient-list-content {
+
+    .modal-container {
       background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
       width: 90%;
       max-width: 600px;
       max-height: 90vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
-    
+
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -142,82 +154,45 @@ import { PatientAppointmentService } from '../../services/appointment/ patient-a
       padding: 16px 20px;
       border-bottom: 1px solid #eee;
     }
-    
-    .modal-header h3 {
+
+    .modal-header h2 {
       margin: 0;
+      font-size: 20px;
       color: #333;
-      font-size: 18px;
     }
-    
-    .close-btn {
+
+    .close-button {
       background: none;
       border: none;
       font-size: 24px;
-      line-height: 1;
-      color: #666;
       cursor: pointer;
+      color: #666;
     }
-    
-    .patients-container {
+
+    .modal-body {
       padding: 20px;
       overflow-y: auto;
-      max-height: calc(90vh - 70px);
+      max-height: calc(90vh - 60px);
     }
-    
-    .loading-spinner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
-    
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      border-top-color: #4db6ac;
-      animation: spin 1s ease-in-out infinite;
-      margin-bottom: 15px;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .no-patients {
-      text-align: center;
-      padding: 30px;
-      color: #666;
-    }
-    
-    .patient-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .patient-card {
-      background-color: #f9f9f9;
+
+    .appointment-card {
+      border: 1px solid #eee;
       border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 16px;
+      overflow: hidden;
     }
-    
-    .patient-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .patient-info {
+
+    .patient-header {
       display: flex;
-      margin-bottom: 12px;
+      align-items: center;
+      padding: 16px;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #eee;
     }
-    
-    .avatar {
-      width: 50px;
-      height: 50px;
+
+    .patient-avatar {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background-color: #4db6ac;
       color: white;
@@ -225,187 +200,139 @@ import { PatientAppointmentService } from '../../services/appointment/ patient-a
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: bold;
       margin-right: 16px;
     }
-    
-    .details h4 {
-      margin: 0 0 6px 0;
+
+    .patient-name h3 {
+      margin: 0;
+      font-size: 18px;
       color: #333;
     }
-    
-    .details p {
-      margin: 2px 0;
+
+    .appointment-details, .patient-contact {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-row {
+      margin-bottom: 8px;
       font-size: 14px;
-      color: #555;
     }
-    
-    .new-tag {
-      display: inline-block;
-      background-color: #e8f5e9;
-      color: #4caf50;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      margin-top: 4px;
+
+    .detail-row:last-child {
+      margin-bottom: 0;
     }
-    
-    .contact-info {
-      border-top: 1px solid #eee;
-      padding-top: 12px;
-      margin-bottom: 12px;
-    }
-    
-    .contact-info p {
-      margin: 4px 0;
-      font-size: 14px;
-      color: #555;
-    }
-    
-    .actions {
+
+    .appointment-actions {
       display: flex;
+      padding: 16px;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 12px;
     }
-    
-    .decline-btn, .approve-btn {
+
+    .decline-button, .approve-button {
       padding: 8px 16px;
       border-radius: 4px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
       border: none;
     }
-    
-    .decline-btn {
+
+    .decline-button {
       background-color: #fff;
       color: #f44336;
       border: 1px solid #f44336;
     }
-    
-    .decline-btn:hover {
-      background-color: #ffebee;
-    }
-    
-    .approve-btn {
+
+    .approve-button {
       background-color: #4caf50;
       color: white;
     }
-    
-    .approve-btn:hover {
-      background-color: #43a047;
-    }
-    
-    .status-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
+
+    .no-appointments {
       text-align: center;
-      margin-top: 8px;
-    }
-    
-    .status-badge.approved {
-      background-color: #e8f5e9;
-      color: #4caf50;
-    }
-    
-    .status-badge.declined {
-      background-color: #ffebee;
-      color: #f44336;
+      padding: 32px 16px;
+      color: #666;
+      font-style: italic;
     }
   `]
 })
 export class DoctorNotificationComponent implements OnInit {
-  @Input() doctorId!: number;
-  
-  unreadCount: number = 0;
-  showPatientList: boolean = false;
-  loading: boolean = false;
-  patients: any[] = [];
-  
-  constructor(
-    private notificationService: DoctorNotificationService,
-    private appointmentService: PatientAppointmentService
-  ) {}
-  
+  @Input() doctorId: number = 0;
+  showAppointmentModal: boolean = false;
+  appointmentRequests: PatientAppointment[] = [];
+
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
-    // Subscribe to unread count updates
-    this.notificationService.unreadCount$.subscribe(count => {
-      this.unreadCount = count;
-    });
-    
-    // Fetch initial unread count
-    if (this.doctorId) {
-      this.notificationService.getUnreadNotificationCount(this.doctorId).subscribe();
+    this.fetchAppointmentRequests();
+  }
+
+  toggleAppointmentModal(): void {
+    this.showAppointmentModal = !this.showAppointmentModal;
+
+    if (this.showAppointmentModal) {
+      this.fetchAppointmentRequests();
     }
   }
-  
-  togglePatientList(): void {
-    this.showPatientList = !this.showPatientList;
-    
-    if (this.showPatientList) {
-      this.loadPatientAppointments();
-    }
-  }
-  
-  closePatientList(): void {
-    this.showPatientList = false;
-  }
-  
-  loadPatientAppointments(): void {
-    this.loading = true;
-    
-    this.appointmentService.getPatientAppointments().subscribe({
-      next: (data) => {
-        this.patients = data;
-        this.loading = false;
-        
-        // Mark notifications as read
-        this.notificationService.markAllNotificationsAsRead(this.doctorId).subscribe();
-      },
-      error: (error) => {
-        console.error('Error loading patient appointments:', error);
-        this.loading = false;
-      }
-    });
-  }
-  
-  updateStatus(appointmentId: number, status: 'APPROVED' | 'DECLINED'): void {
-    this.appointmentService.updateAppointmentStatus(appointmentId, status).subscribe({
-      next: () => {
-        // Update the status in the UI
-        const appointment = this.patients.find(p => p.id === appointmentId);
-        if (appointment) {
-          appointment.status = status;
+
+  fetchAppointmentRequests(): void {
+    const token = localStorage.getItem('access_token');
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    this.http.get<PatientAppointment[]>(`${environments.apiUrl}/patient/detail`, { headers })
+      .subscribe({
+        next: (data) => {
+          this.appointmentRequests = data;
+        },
+        error: (error) => {
+          console.error('Error fetching appointment requests:', error);
         }
-        
-        // Show toast message (you can add a toast service for this)
-        console.log(`Appointment ${status.toLowerCase()} successfully`);
-      },
-      error: (error) => {
-        console.error(`Error updating appointment status:`, error);
-      }
-    });
+      });
   }
-  
+
+  handleAppointment(appointmentId: number, status: 'APPROVED' | 'DECLINED'): void {
+    const token = localStorage.getItem('access_token');
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    this.http.patch(`${environments.apiUrl}/appointments/${appointmentId}/status`, { status }, { headers })
+      .subscribe({
+        next: () => {
+          // Remove the appointment from the list after approval/decline
+          this.appointmentRequests = this.appointmentRequests.filter(a => a.id !== appointmentId);
+          
+          // Show toast message (you can add a toast service)
+          alert(`Appointment ${status.toLowerCase()} successfully`);
+          
+          // Close modal if no more appointments
+          if (this.appointmentRequests.length === 0) {
+            this.showAppointmentModal = false;
+          }
+        },
+        error: (error) => {
+          console.error(`Error ${status.toLowerCase()} appointment:`, error);
+          alert(`Failed to ${status.toLowerCase()} appointment. Please try again.`);
+        }
+      });
+  }
+
   getInitials(name: string): string {
-    if (!name) return '';
+    if (!name) return 'US';
     
-    const names = name.split(' ');
-    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    const parts = name.split(' ');
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     
-    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
   }
-  
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
     
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('en-US', {
       weekday: 'short',
-      month: 'short', 
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
