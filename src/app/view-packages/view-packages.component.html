@@ -1,20 +1,20 @@
-
 <div class="view-packages-container">
     <div class="card">
       <div class="card-header">
-        <h2>View Packages</h2>
+        <h3>View Packages</h3>
         <button class="btn btn-primary refresh-btn" (click)="loadPackages()" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
           <span *ngIf="!isLoading" class="refresh-icon">⟳</span>
           Refresh
         </button>
       </div>
+      
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="alert alert-danger m-3">
+        {{ errorMessage }}
+      </div>
+      
       <div class="card-body">
-        <!-- Error message -->
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
-        </div>
-        
         <!-- Loading spinner -->
         <div *ngIf="isLoading" class="loading-container">
           <div class="spinner-border text-primary"></div>
@@ -43,22 +43,39 @@
               <tr *ngFor="let pkg of packages">
                 <td>{{ pkg.packageId }}</td>
                 <td>{{ pkg.packageName }}</td>
-                <td>{{ pkg.packagePrice | currency }}</td>
+                <td>${{ pkg.packagePrice | number:'1.2-2' }}</td>
                 <td>{{ pkg.description || 'N/A' }}</td>
                 <td>{{ pkg.testType || 'N/A' }}</td>
                 <td>
-                  <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-primary">
-                      <i class="fa fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger ms-2">
-                      <i class="fa fa-trash"></i> Delete
-                    </button>
-                  </div>
+                  <button class="btn btn-outline-danger delete-btn" (click)="confirmDelete(pkg)">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Delete Confirmation Popup -->
+  <div *ngIf="showDeleteConfirm" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Confirm Delete</h2>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete the package "{{ packageToDelete?.packageName }}"?</p>
+          <p class="text-danger">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+          <button class="btn btn-danger" (click)="deletePackage()" [disabled]="deleteInProgress">
+            <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm me-2"></span>
+            Delete
+          </button>
         </div>
       </div>
     </div>
