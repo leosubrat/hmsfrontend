@@ -1,0 +1,89 @@
+<div class="create-package-container">
+    <div class="card">
+      <div class="card-header">
+        <h2>Create New Package</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="packageForm" (ngSubmit)="onSubmit()">
+          <div *ngIf="successMessage" class="alert alert-success">
+            {{ successMessage }}
+          </div>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          
+          <!-- Package Name -->
+          <div class="form-group">
+            <label for="packageName">Package Name*</label>
+            <input 
+              type="text" 
+              id="packageName" 
+              formControlName="packageName" 
+              class="form-control" 
+              [class.is-invalid]="packageForm.get('packageName')?.invalid && packageForm.get('packageName')?.touched"
+            >
+            <div *ngIf="packageForm.get('packageName')?.invalid && packageForm.get('packageName')?.touched" class="invalid-feedback">
+              Package name is required
+            </div>
+          </div>
+          
+          <!-- Package Price -->
+          <div class="form-group">
+            <label for="packagePrice">Package Price*</label>
+            <input 
+              type="number" 
+              id="packagePrice" 
+              formControlName="packagePrice" 
+              class="form-control" 
+              [class.is-invalid]="packageForm.get('packagePrice')?.invalid && packageForm.get('packagePrice')?.touched"
+            >
+            <div *ngIf="packageForm.get('packagePrice')?.invalid && packageForm.get('packagePrice')?.touched" class="invalid-feedback">
+              <span *ngIf="packageForm.get('packagePrice')?.errors?.['required']">Package price is required</span>
+              <span *ngIf="packageForm.get('packagePrice')?.errors?.['min']">Price cannot be negative</span>
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              class="form-control" 
+              rows="3"
+            ></textarea>
+          </div>
+          
+          <!-- Test Type -->
+          <div class="form-group">
+            <label for="testType">Test Type</label>
+            <input 
+              type="text" 
+              id="testType" 
+              formControlName="testType" 
+              class="form-control"
+            >
+          </div>
+          
+          <!-- Submit Button -->
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn btn-primary" 
+              [disabled]="packageForm.invalid || isSubmitting"
+            >
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+              Create Package
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              (click)="packageForm.reset()"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

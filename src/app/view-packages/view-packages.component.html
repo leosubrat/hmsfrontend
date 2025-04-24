@@ -1,0 +1,65 @@
+
+<div class="view-packages-container">
+    <div class="card">
+      <div class="card-header">
+        <h2>View Packages</h2>
+        <button class="btn btn-primary refresh-btn" (click)="loadPackages()" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+          <span *ngIf="!isLoading" class="refresh-icon">⟳</span>
+          Refresh
+        </button>
+      </div>
+      <div class="card-body">
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        
+        <!-- Loading spinner -->
+        <div *ngIf="isLoading" class="loading-container">
+          <div class="spinner-border text-primary"></div>
+          <p>Loading packages...</p>
+        </div>
+        
+        <!-- No packages message -->
+        <div *ngIf="!isLoading && packages.length === 0 && !errorMessage" class="no-data">
+          <p>No packages found. Create a new package to get started.</p>
+        </div>
+        
+        <!-- Packages table -->
+        <div *ngIf="!isLoading && packages.length > 0" class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Package Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Test Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pkg of packages">
+                <td>{{ pkg.packageId }}</td>
+                <td>{{ pkg.packageName }}</td>
+                <td>{{ pkg.packagePrice | currency }}</td>
+                <td>{{ pkg.description || 'N/A' }}</td>
+                <td>{{ pkg.testType || 'N/A' }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary">
+                      <i class="fa fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger ms-2">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

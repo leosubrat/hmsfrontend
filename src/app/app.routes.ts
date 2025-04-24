@@ -9,8 +9,10 @@ import { AuthGuard } from './guards/auth.guard';
 import { UserDashboardComponent } from './components/patient/user-dashboard.component';
 import { AppointmentFormComponent } from './components/appointment-form/appointment-form.component';
 import { UserProfileComponent } from './components/patient/user-profile.component';
-import { AdminDashboardComponent } from './components/admin/admin.component';
 import { AppointmentListComponent } from './components/appointment-form/appointment-list.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { CreatePackageComponent } from './create-package/create-package.component';
+import { ViewPackagesComponent } from './view-packages/view-packages.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +64,16 @@ export const routes: Routes = [
   {
     path:'get/all/appointment',
     component:AppointmentListComponent,
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'create/package',
+    component:CreatePackageComponent,
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'view/package',
+    component:ViewPackagesComponent,
     canActivate:[AuthGuard]
   },
   {

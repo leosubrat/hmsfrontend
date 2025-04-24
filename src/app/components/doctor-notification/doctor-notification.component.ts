@@ -292,29 +292,45 @@ export class DoctorNotificationComponent implements OnInit {
       });
   }
 
-  handleAppointment(appointmentId: number, status: 'APPROVED' | 'DECLINED'): void {
+  handleAppointment(appointmentId: number, status: string): void {
     const token = localStorage.getItem('access_token');
     const headers = { 'Authorization': `Bearer ${token}` };
-
-    this.http.patch(`${environments.apiUrl}/appointments/${appointmentId}/status`, { status }, { headers })
-      .subscribe({
+      
+    if (status === 'APPROVED') {
+      // Call your specific APPROVED endpoint with appointmentId
+      this.http.post(`${environments.apiUrl}/appointments/approved`, null, {
+        headers,
+        params: { appointmentId: appointmentId.toString() }  // Send appointmentId instead of status
+      }).subscribe({
         next: () => {
-          // Remove the appointment from the list after approval/decline
-          this.appointmentRequests = this.appointmentRequests.filter(a => a.id !== appointmentId);
-          
-          // Show toast message (you can add a toast service)
-          alert(`Appointment ${status.toLowerCase()} successfully`);
-          
-          // Close modal if no more appointments
+          this.appointmentRequests = this.appointmentRequests.filter(a => a.id !== appointmentId);    
           if (this.appointmentRequests.length === 0) {
             this.showAppointmentModal = false;
           }
         },
         error: (error) => {
-          console.error(`Error ${status.toLowerCase()} appointment:`, error);
-          alert(`Failed to ${status.toLowerCase()} appointment. Please try again.`);
+          console.error('Error approving appointment:', error);
+          alert('Failed to approve appointment. Please try again.');
         }
       });
+    } else if (status === 'DECLINED') {
+      this.http.post(`${environments.apiUrl}/appointments/declined`, null, {  // Different endpoint for declined
+        headers,
+        params: { appointmentId: appointmentId.toString() }  // Send appointmentId instead of status
+      }).subscribe({
+        next: () => {
+          // Remove the appointment from the list after declining
+          this.appointmentRequests = this.appointmentRequests.filter(a => a.id !== appointmentId);
+          if (this.appointmentRequests.length === 0) {
+            this.showAppointmentModal = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error declining appointment:', error);
+          alert('Failed to decline appointment. Please try again.');
+        }
+      });
+    }
   }
 
   getInitials(name: string): string {

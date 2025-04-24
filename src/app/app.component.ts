@@ -59,7 +59,9 @@ export class AppComponent implements OnInit {
       '/get/all/appointment',
       '/patient/book/appointment',
       '/doctor/dashboard',
-      '/admin/dashboard'
+      '/admin/dashboard',
+      '/create/package',
+      '/view/package'
     ];
     
     // Check if the current URL matches any of these routes
