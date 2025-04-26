@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminPackage } from '../models/admin.model';
 import { environments } from '../../environments/environment';
+import { ApiResponse } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,10 @@ export class AdminPackageService {
     console.log('Calling DELETE:', fullUrl, 'with params:', params.toString());
     
     return this.http.delete<void>(fullUrl, { params });
+  }
+
+  approvePackage(packageId: number): Observable<ApiResponse> {
+    const params = new HttpParams().set('packageId', packageId.toString());
+    return this.http.put<ApiResponse>(`${this.baseUrl}/package/approve`, {}, { params });
   }
 }

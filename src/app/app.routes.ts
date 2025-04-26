@@ -14,6 +14,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { CreatePackageComponent } from './create-package/create-package.component';
 import { ViewPackagesComponent } from './view-packages/view-packages.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { ApprovedPackagesComponent } from './approved-package/approved-package.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,11 @@ export const routes: Routes = [
   {
     path:'patient/book/appointment',
     component:AppointmentFormComponent,
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'package/approved',
+    component:ApprovedPackagesComponent,
     canActivate:[AuthGuard]
   },
   {

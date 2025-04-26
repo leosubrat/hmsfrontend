@@ -1,54 +1,61 @@
+<!-- dashboard.component.html -->
 <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside [class.collapsed]="isSidebarCollapsed" class="sidebar">
-      <div class="sidebar-header">
-        <h2>Admin Dashboard</h2>
-        <button class="toggle-btn" (click)="toggleSidebar()">
-          <span>&#9776;</span>
-        </button>
-      </div>
-      
-      <nav class="sidebar-nav">
-        <ul>
-          <li>
-            <a routerLink="/create/package" routerLinkActive="active">
-              <span class="icon">+</span>
-              <span class="text" [class.hidden]="isSidebarCollapsed">Create Package</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/view/package" routerLinkActive="active">
-              <span class="icon">&#128065;</span>
-              <span class="text" [class.hidden]="isSidebarCollapsed">View Packages</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/view/users" routerLinkActive="active">
-              <span class="icon">👤</span>
-              <span class="text" [class.hidden]="isSidebarCollapsed">View Users</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      
-      <!-- Logout button at the bottom of sidebar -->
-      <div class="sidebar-bottom">
-        <button class="logout-btn" (click)="logout()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-          </svg>
-          <span class="text" [class.hidden]="isSidebarCollapsed">Logout</span>
-        </button>
-      </div>
-    </aside>
-  
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="header">
-        <h1>Hospital Package Management</h1>
-      </header>
-      <div class="content">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
-  </div>
+  <!-- Sidebar -->
+  <aside [class.collapsed]="isSidebarCollapsed" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Admin Dashboard</h2>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <span>&#9776;</span>
+      </button>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a routerLink="/create/package" routerLinkActive="active">
+            <span class="icon">+</span>
+            <span class="text" [class.hidden]="isSidebarCollapsed">Create Package</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/view/package" routerLinkActive="active">
+            <span class="icon">&#128065;</span>
+            <span class="text" [class.hidden]="isSidebarCollapsed">View Packages</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/package/approved" routerLinkActive="active">
+            <span class="icon">✓</span>
+            <span class="text" [class.hidden]="isSidebarCollapsed">Approved Packages</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/view/users" routerLinkActive="active">
+            <span class="icon">👤</span>
+            <span class="text" [class.hidden]="isSidebarCollapsed">View Users</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- Logout button at the bottom of sidebar -->
+    <div class="sidebar-bottom">
+      <button class="logout-btn" (click)="logout()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        <span class="text" [class.hidden]="isSidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <h1>Hospital Package Management</h1>
+    </header>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

@@ -1,136 +1,420 @@
+/* user-list.component.scss */
 .user-list-container {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
-
-.user-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.user-list-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.refresh-btn {
-  display: flex;
-  align-items: center;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.refresh-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.refresh-btn .icon {
-  margin-right: 5px;
-}
-
-.filters {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.search-box {
-  display: flex;
-  flex: 1;
-  min-width: 250px;
-}
-
-.search-box input {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
-  outline: none;
-}
-
-.search-box button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 0 4px 4px 0;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-.role-filter {
-  display: flex;
-  align-items: center;
-}
-
-.role-filter label {
-  margin-right: 0.5rem;
-}
-
-.role-filter select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  outline: none;
-}
-
-.loading, .error-message, .no-users {
-  text-align: center;
-  padding: 2rem 0;
-  color: #666;
-}
-
-.error-message {
-  color: #e74c3c;
-}
-
-.users-grid {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  text-align: left;
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-th {
-  background-color: #f9f9f9;
-  font-weight: 600;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
-}
-
-.role-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.role-badge.doctor {
-  background-color: #e3f2fd;
-  color: #1976d2;
-}
-
-.role-badge.patient {
-  background-color: #e8f5e9;
-  color: #388e3c;
-}
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  .user-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-list-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .refresh-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .refresh-btn .icon {
+    margin-right: 5px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .search-box {
+    display: flex;
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .search-box input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+  }
+  
+  .search-box button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .role-filter {
+    display: flex;
+    align-items: center;
+  }
+  
+  .role-filter label {
+    margin-right: 0.5rem;
+  }
+  
+  .role-filter select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  .loading, .error-message, .no-users {
+    text-align: center;
+    padding: 2rem 0;
+    color: #666;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+  }
+  
+  .users-grid {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+  }
+  
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .role-badge.doctor {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  .role-badge.user {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+  
+  /* New styles for action buttons */
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .edit-btn, .delete-btn {
+    display: flex;
+    align-items: center;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .edit-btn {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .edit-btn:hover {
+    background-color: #e67e22;
+  }
+  
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .action-buttons .icon {
+    margin-right: 5px;
+  }
+  /* user-list.component.scss */
+.user-list-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  .user-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-list-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .refresh-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .refresh-btn .icon {
+    margin-right: 5px;
+  }
+  
+  /* Edit Form Styles */
+  .edit-form {
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .edit-form h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .save-btn, .cancel-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .save-btn {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #27ae60;
+  }
+  
+  .cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Filters Styles */
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .search-box {
+    display: flex;
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .search-box input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+  }
+  
+  .search-box button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .role-filter {
+    display: flex;
+    align-items: center;
+  }
+  
+  .role-filter label {
+    margin-right: 0.5rem;
+  }
+  
+  .role-filter select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  .loading, .error-message, .no-users {
+    text-align: center;
+    padding: 2rem 0;
+    color: #666;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+  }
+  
+  .users-grid {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+  }
+  
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .role-badge.doctor {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  .role-badge.user {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .edit-btn, .delete-btn {
+    display: flex;
+    align-items: center;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .edit-btn {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .edit-btn:hover {
+    background-color: #e67e22;
+  }
+  
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .action-buttons .icon {
+    margin-right: 5px;
+  }

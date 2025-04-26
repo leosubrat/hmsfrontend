@@ -107,39 +107,25 @@ export class ViewPackagesComponent implements OnInit {
 
   approvePackage(): void {
     if (!this.selectedPackage || this.selectedPackage.packageId === undefined) {
+      console.error('Cannot approve package: Package ID is undefined');
       return;
     }
     
     this.approveInProgress = true;
-    const packageId = this.selectedPackage.packageId;
     
-    // Call your service method to approve the package
-    // For now, we'll just simulate a successful approval
-    setTimeout(() => {
-      this.approveInProgress = false;
-      this.showApproveConfirm = false;
-      this.selectedPackage = null;
-      // You would typically show a success message here
-      document.body.style.overflow = '';
-    }, 1000);
-    
-    // When you have the actual service method, use this:
-    /*
-    this.packageService.approvePackage(packageId).subscribe({
-      next: () => {
+    this.packageService.approvePackage(this.selectedPackage.packageId).subscribe(
+      (response) => {
+        console.log('Package approved successfully:', response);
+        this.cancelApprove();
         this.approveInProgress = false;
-        this.showApproveConfirm = false;
-        this.selectedPackage = null;
-        document.body.style.overflow = '';
+        this.loadPackages();
       },
-      error: (error) => {
+      (error) => {
         console.error('Error approving package:', error);
-        this.errorMessage = 'Failed to approve the package. Please try again.';
+        this.errorMessage = 'Failed to approve package. Please try again.';
+        this.cancelApprove();
         this.approveInProgress = false;
-        this.showApproveConfirm = false;
-        document.body.style.overflow = '';
       }
-    });
-    */
+    );
   }
 }

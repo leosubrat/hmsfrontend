@@ -1,0 +1,138 @@
+<!-- approved-packages.component.html -->
+<div class="approved-packages-container">
+    <div class="card">
+      <div class="card-header">
+        <h3>Approved Packages</h3>
+        <button class="btn btn-primary refresh-btn" (click)="loadApprovedPackages()">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+          <span *ngIf="!isLoading" class="refresh-icon">⟳</span>
+          Refresh
+        </button>
+      </div>
+      
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="alert alert-danger m-3">
+        {{ errorMessage }}
+      </div>
+      
+      <div class="card-body">
+        <!-- Loading spinner -->
+        <div *ngIf="isLoading" class="loading-container">
+          <div class="spinner-border text-primary"></div>
+          <p>Loading approved packages...</p>
+        </div>
+        
+        <!-- No packages message -->
+        <div *ngIf="!isLoading && approvedPackages.length === 0 && !errorMessage" class="no-data">
+          <p>No approved packages found.</p>
+        </div>
+        
+        <!-- Packages table -->
+        <div *ngIf="!isLoading && approvedPackages.length > 0" class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Package Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Test Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pkg of approvedPackages; let i = index">
+                <td>{{ pkg.packageId || pkg.packageId || (i + 1) }}</td>
+                <td>{{ pkg.packageName || 'Package ' + (i + 1) }}</td>
+                <td>Rs. {{ pkg.packagePrice | number:'1.2-2' }}</td>
+                <td>{{ pkg.description || 'N/A' }}</td>
+                <td>{{ pkg.testType || 'N/A' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+  .approved-packages-container {
+    padding: 20px;
+  }
+  
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .card-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+  }
+  
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .refresh-btn:hover {
+    background-color: #0069d9;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 30px 0;
+    color: #6c757d;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  </style>

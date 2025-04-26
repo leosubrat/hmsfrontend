@@ -1,14 +1,19 @@
 // src/app/services/user.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environments } from '../../environments/environment';
 import { UserDto } from '../models/doctor.model';
+import { ApiResponse } from './auth.service';
 export interface UserDoctorDto {
   id: number;
   username: string;
   email: string;
   role: string;
+  firstName:string;
+  lastName:string
+  middleName:string
+  phone:string
   // Add any other fields from your DTO
 }
 
@@ -50,5 +55,14 @@ export class UserService {
   }
   getAllUsers(): Observable<UserResponse> {
     return this.http.get<UserResponse>(`${this.baseUrl}/get-all-user`);
+  }
+  updateUser(id: number, userData: UserDoctorDto): Observable<ApiResponse> {
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.put<ApiResponse>(`${this.baseUrl}/update-user`, userData, { params });
+  }
+  
+  deleteUser(id: number): Observable<ApiResponse> {
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.delete<ApiResponse>(`${this.baseUrl}/delete-user`, { params });
   }
 }

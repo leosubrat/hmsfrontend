@@ -1,3 +1,4 @@
+<!-- user-list.component.html -->
 <div class="user-list-container">
     <div class="user-list-header">
       <h2>User Management</h2>
@@ -8,10 +9,10 @@
   
     <div class="filters">
       <div class="search-box">
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          placeholder="Search by name or email" 
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by name or email"
           (keyup.enter)="onSearch()"
         >
         <button (click)="onSearch()">Search</button>
@@ -21,8 +22,8 @@
         <label>Filter by Role:</label>
         <select [(ngModel)]="roleFilter" (change)="applyFilters()">
           <option value="all">All Users</option>
-          <option value="doctor">Doctors</option>
-          <option value="user">User</option>
+          <option value="DOCTOR">Doctors</option>
+          <option value="USER">Users</option>
         </select>
       </div>
     </div>
@@ -44,24 +45,103 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Username</th>
+            <th>Name</th>
             <th>Email</th>
+            <th>Phone</th>
             <th>Role</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let user of filteredUsers">
             <td>{{ user.id }}</td>
-            <td>{{ user.username }}</td>
+            <td>{{ user.firstName }} {{ user.middleName ? user.middleName : '' }} {{ user.lastName }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
             <td>
               <span class="role-badge" [ngClass]="user.role.toLowerCase()">
                 {{ user.role }}
               </span>
+            </td>
+            <td class="action-buttons">
+              <button class="edit-btn" (click)="editUser(user)">
+                <span class="icon">✎</span> Edit
+              </button>
+              <button class="delete-btn" (click)="deleteUser(user.id)">
+                <span class="icon">🗑</span> Delete
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <!-- user-list.component.html - improved edit form section -->
+<!-- Edit Form -->
+<div *ngIf="isEditMode && selectedUser" class="edit-form">
+    <h3>Edit User</h3>
+    <div *ngIf="error" class="error-message edit-error">
+      {{ error }}
+    </div>
+    <form (ngSubmit)="saveUser()" #editForm="ngForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" [(ngModel)]="selectedUser.firstName" name="firstName" required #firstName="ngModel">
+        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="validation-error">
+          First name is required.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="middleName">Middle Name</label>
+        <input type="text" id="middleName" [(ngModel)]="selectedUser.middleName" name="middleName">
+      </div>
+      
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" [(ngModel)]="selectedUser.lastName" name="lastName" required #lastName="ngModel">
+        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="validation-error">
+          Last name is required.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="selectedUser.email" name="email" required email #email="ngModel">
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="validation-error">
+          Valid email is required.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" [(ngModel)]="selectedUser.phone" name="phone" required #phone="ngModel">
+        <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="validation-error">
+          Phone number is required.
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="save-btn" [disabled]="editForm.invalid || isLoading">
+          <span *ngIf="isLoading">Saving...</span>
+          <span *ngIf="!isLoading">Save Changes</span>
+        </button>
+        <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>
   
+  <style>
+  .validation-error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+  }
+  
+  .edit-error {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 4px;
+  }
+  </style>
