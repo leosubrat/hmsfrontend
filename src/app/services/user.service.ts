@@ -4,11 +4,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environments } from '../../environments/environment';
 import { UserDto } from '../models/doctor.model';
+export interface UserDoctorDto {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  // Add any other fields from your DTO
+}
+
+export interface UserResponse {
+  data: UserDoctorDto[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
+  
   private baseUrl = `${environments.apiUrl}`;
 
   constructor(private http: HttpClient) { }
@@ -34,5 +47,8 @@ export class UserService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.get<UserDto>(`${this.baseUrl}/get/user/detail`,{headers});
+  }
+  getAllUsers(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.baseUrl}/get-all-user`);
   }
 }

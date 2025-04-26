@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { DoctorService } from '../../../services/doctor/doctor.service';
@@ -37,25 +37,11 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
         <span>Dashboard</span>
       </button>
       
-      <button class="nav-item">
+      <button class="nav-item" (click)="navigateToAppointments()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
           <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
         </svg>
         <span>Appointments</span>
-      </button>
-      
-      <button class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-        <span>My Profile</span>
-      </button>
-      
-      <button class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-        </svg>
-        <span>Settings</span>
       </button>
       
       <button class="nav-item logout" (click)="logout()">
@@ -76,49 +62,6 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
     </header>
     
     <div class="dashboard-grid">
-      <div class="dashboard-card summary-stats">
-        <h2>Summary</h2>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-value">12</div>
-            <div class="stat-label">Appointments Today</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">45</div>
-            <div class="stat-label">Total Patients</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value">4.8</div>
-            <div class="stat-label">Rating</div>
-          </div>
-        </div>
-      </div>
-      <app-appointment-list></app-appointment-list>>
-      <div class="dashboard-card profile-form">
-        <h2>Professional Profile</h2>
-        <div class="form-group">
-          <label for="description">Professional Description</label>
-          <textarea 
-            id="description" 
-            rows="4" 
-            [(ngModel)]="doctorDto.description" 
-            placeholder="Describe your expertise, education, and approach to patient care..."
-          ></textarea>
-          <p class="field-info">This description will be visible to patients on your profile</p>
-        </div>
-        
-        <div class="photo-upload-section">
-          <div class="photo-preview" [ngStyle]="{'background-image': photoPreview ? 'url(' + photoPreview + ')' : 'none'}">
-            <span *ngIf="!photoPreview">No Photo</span>
-          </div>
-          <div class="photo-upload-controls">
-            <label for="photo-upload" class="upload-btn">Change Profile Photo</label>
-            <input type="file" id="photo-upload" accept="image/*">
-            <p class="field-info">Recommended: Square image, at least 300x300 pixels</p>
-          </div>
-        </div>
-      </div>
-      
       <div class="dashboard-card availability">
         <h2>My Availability</h2>
         
@@ -206,7 +149,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
           </div>
         </div>
         
-        <button class="view-all-btn">View All Appointments</button>
+        <button class="view-all-btn" (click)="navigateToAppointments()">View All Appointments</button>
       </div>
     </div>
     
@@ -378,152 +321,8 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       border-bottom: 1px solid #f0f0f0;
     }
     
-    /* Summary Stats Card */
-    .summary-stats {
-      grid-column: span 2;
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    
-    .stat-item {
-      text-align: center;
-      padding: 16px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-    
-    .stat-item:hover {
-      background-color: #e3f2fd;
-      transform: translateY(-3px);
-    }
-    
-    .stat-value {
-      font-size: 28px;
-      font-weight: 600;
-      color: #01579b;
-      margin-bottom: 8px;
-    }
-    
-    .stat-label {
-      font-size: 14px;
-      color: #666;
-    }
-    
-    /* Profile Form Card */
-    .profile-form {
-      grid-column: span 2;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #333;
-    }
-    
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      resize: vertical;
-      font-family: inherit;
-      font-size: 14px;
-      line-height: 1.5;
-      transition: all 0.2s;
-    }
-    
-    textarea:focus {
-      outline: none;
-      border-color: #4db6ac;
-      box-shadow: 0 0 0 2px rgba(77, 182, 172, 0.1);
-    }
-    
-    .field-info {
-      margin-top: 6px;
-      font-size: 13px;
-      color: #757575;
-      font-style: italic;
-    }
-    
-    .photo-upload-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    
-    .photo-preview {
-      width: 120px;
-      height: 120px;
-      border-radius: 8px;
-      background-color: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #e0e0e0;
-      overflow: hidden;
-      background-size: cover;
-      background-position: center;
-    }
-    
-    .photo-upload-controls {
-      flex: 1;
-    }
-    
-    .upload-btn {
-      display: inline-block;
-      padding: 10px 16px;
-      background-color: #4db6ac;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-    
-    .upload-btn:hover {
-      background-color: #00897b;
-    }
-    
     /* Availability Card */
-    .availability-tabs {
-      display: flex;
-      margin-bottom: 16px;
-      background-color: #f5f5f5;
-      border-radius: 6px;
-      padding: 4px;
-    }
-    
-    .tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      background: transparent;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-    
-    .tab.active {
-      background-color: white;
-      color: #01579b;
-      font-weight: 500;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Custom Date Picker Styles */
-    .custom-date-picker {
+    .date-picker-section {
       margin-bottom: 16px;
       padding: 12px;
       background-color: #f9f9f9;
@@ -742,14 +541,6 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       .dashboard-grid {
         grid-template-columns: 1fr;
       }
-      
-      .summary-stats {
-        grid-column: span 1;
-      }
-      
-      .profile-form {
-        grid-column: span 1;
-      }
     }
     
     @media (max-width: 992px) {
@@ -780,61 +571,51 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
         border-top: none;
       }
       
-      .photo-upload-section {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .success-toast, .error-toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
-  }
-  .error-toast {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  @keyframes fadeOut {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(-20px); }
-  }
-  .success-toast {
-    background-color: #4caf50;
-    color: white;
-  }
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .custom-date-picker {
-        flex-direction: column;
-      }
-      
       .date-input-container {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
       }
     }
+    
+    .success-toast, .error-toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+    }
+    
+    .error-toast {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .success-toast {
+      background-color: #4caf50;
+      color: white;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
   `]
 })
 export class DoctorDashboardComponent implements OnInit, OnDestroy {
   doctorInfo: any = null;
   photoPreview: string | null = null;
-  photoFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
 
   // Selected date and its time slots
@@ -848,11 +629,7 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     doctorId: 0,
     firstName: '',
     lastName: '',
-    middleName: '',
-    experience: 0,
-    expertise: '',
-    salary: '',
-    description: ''
+    expertise: ''
   };
   
   constructor(
@@ -873,6 +650,10 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+  
+  navigateToAppointments(): void {
+    this.router.navigate(['/get/all/appointment']);
   }
   
   getInitials(): string {
@@ -936,11 +717,7 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
           doctorId: data.doctorId || 0,
           firstName: data.firstName || '',
           lastName: data.lastName || '',
-          middleName: data.middleName || '',
-          expertise: data.expertise || '',
-          experience: data.experience || 0,
-          salary: data.salary || '',
-          description: data.description || ''
+          expertise: data.expertise || ''
         };
         
         // Load dates availability if there is any
@@ -983,69 +760,85 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     this.currentDateSlots.splice(index, 1);
   }
   
-  
-
-  
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
-
   saveChanges(): void {
     const doctorData = {
       ...this.doctorDto,
-      selectedDate: this.selectedDate,        // The currently selected date
-      timeSlots: this.currentDateSlots       // The time slots for the selected date
+      selectedDate: this.selectedDate,
+      timeSlots: this.currentDateSlots
     };
   
     this.doctorService.updateDoctorProfile(doctorData).subscribe({
-      next: (updatedData) => {
-        // Update the UI with the response
-        this.showToast('Profile updated successfully', 'success');
+      next: (response) => {
+        // Check if the response has the expected structure
+        if (response && response.message) {
+          // Use the message from the backend response
+          this.showToast(response.message, 'success');
+        } else if (response && response.data && response.data.message) {
+          // Try alternative structure if the message is nested in data
+          this.showToast(response.data.message, 'success');
+        } else {
+          // Fallback if the response structure is unexpected
+          this.showToast('Profile updated successfully', 'success');
+        }
         
-        // If there's updated availability data, refresh it
+        // Handle the data from the response
+        const updatedData = response.data || response;
+        
+        // Update local data if there are time slots returned
         if (updatedData.timeSlots && this.selectedDate) {
           this.datesAvailability[this.selectedDate] = updatedData.timeSlots;
           this.currentDateSlots = [...this.datesAvailability[this.selectedDate]];
         }
+        
+        // Debug log to check what's being received
+        console.log('Update response:', response);
       },
       error: (error) => {
+        console.error('Error updating doctor profile:', error);
         this.showToast('Failed to update profile. Please try again.', 'error');
       }
     });
   }
   
-  // Helper methods for availability
-  private getTodayAvailability(): Array<{ startTime: string, endTime: string }> {
-    const today = this.formatDateForInput(new Date());
-    return this.datesAvailability[today] || [];
-  }
+  // Replace your showToast method with this one
+private showToast(message: string, type: 'success' | 'error'): void {
+  // Remove any existing toasts
+  const existingToasts = document.querySelectorAll('.toast-container');
+  existingToasts.forEach(toast => toast.remove());
   
-  private getTomorrowAvailability(): Array<{ startTime: string, endTime: string }> {
-    const tomorrow = this.formatDateForInput(new Date(Date.now() + 86400000)); // +1 day in ms
-    return this.datesAvailability[tomorrow] || [];
-  }
+  // Create container
+  const toastContainer = document.createElement('div');
+  toastContainer.className = 'toast-container';
+  toastContainer.style.position = 'fixed';
+  toastContainer.style.bottom = '30px';
+  toastContainer.style.right = '30px';
+  toastContainer.style.zIndex = '9999';
   
-  private mapTimeSlots(slots: any[]): Array<{ startTime: string, endTime: string }> {
-    return slots.map(slot => ({
-      startTime: slot.startTime,
-      endTime: slot.endTime
-    }));
-  }
+  // Create toast element with inline styles (to avoid CSS issues)
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.backgroundColor = type === 'success' ? '#4caf50' : '#f44336';
+  toast.style.color = 'white';
+  toast.style.padding = '15px 20px';
+  toast.style.borderRadius = '8px';
+  toast.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
+  toast.style.display = 'flex';
+  toast.style.alignItems = 'center';
+  toast.style.minWidth = '200px';
   
-  // Add a toast message system
-  private showToast(message: string, type: 'success' | 'error'): void {
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = type === 'success' ? 'success-toast' : 'error-toast';
-    toast.textContent = message;
-    
-    // Append to document
-    document.body.appendChild(toast);
-    
-    // Remove after 3 seconds
+  toastContainer.appendChild(toast);
+    document.body.appendChild(toastContainer);
+  
+  console.log(`Showing ${type} toast with message: ${message}`);
     setTimeout(() => {
-      toast.remove();
-    }, 3000);
-  }
+    if (document.body.contains(toastContainer)) {
+      document.body.removeChild(toastContainer);
+    }
+  }, 3000);
+}
+  
 }

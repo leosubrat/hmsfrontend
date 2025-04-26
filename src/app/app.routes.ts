@@ -13,6 +13,7 @@ import { AppointmentListComponent } from './components/appointment-form/appointm
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CreatePackageComponent } from './create-package/create-package.component';
 import { ViewPackagesComponent } from './view-packages/view-packages.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 export const routes: Routes = [
   {
@@ -66,6 +67,12 @@ export const routes: Routes = [
     component:AppointmentListComponent,
     canActivate:[AuthGuard]
   },
+  { path: 'view/users', 
+    component: UserListComponent,
+    canActivate:[AuthGuard]
+
+   },
+
   {
     path:'create/package',
     component:CreatePackageComponent,

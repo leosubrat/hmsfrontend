@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+// view-packages.component.ts
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminPackageService } from '../admin-dashboard/admin.service';
 import { AdminPackage } from '../models/admin.model';
@@ -11,12 +12,17 @@ import { AdminPackage } from '../models/admin.model';
   styleUrls: ['./view-packages.component.scss']
 })
 export class ViewPackagesComponent implements OnInit {
+  @Input() userView: boolean = false; // Flag to determine if this is user view
+
   packages: AdminPackage[] = [];
   isLoading = false;
   errorMessage = '';
   packageToDelete: AdminPackage | null = null;
   deleteInProgress = false;
   showDeleteConfirm = false;
+  selectedPackage: AdminPackage | null = null;
+  showApproveConfirm = false;
+  approveInProgress = false;
 
   constructor(private packageService: AdminPackageService) {}
 
@@ -44,18 +50,15 @@ export class ViewPackagesComponent implements OnInit {
   confirmDelete(pkg: AdminPackage): void {
     this.packageToDelete = pkg;
     this.showDeleteConfirm = true;
-    // Scroll to the confirmation section
-    setTimeout(() => {
-      const element = document.querySelector('.confirm-delete-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    // Prevent background scrolling when modal is open
+    document.body.style.overflow = 'hidden';
   }
 
   cancelDelete(): void {
     this.packageToDelete = null;
     this.showDeleteConfirm = false;
+    // Re-enable scrolling
+    document.body.style.overflow = '';
   }
 
   deletePackage(): void {
@@ -73,15 +76,70 @@ export class ViewPackagesComponent implements OnInit {
         this.showDeleteConfirm = false;
         this.packageToDelete = null;
         this.deleteInProgress = false;
+        // Re-enable scrolling
+        document.body.style.overflow = '';
       },
       error: (error) => {
         console.error('Error deleting package:', error);
         this.errorMessage = 'Failed to delete the package. Please try again.';
         this.deleteInProgress = false;
         this.showDeleteConfirm = false;
-        // Scroll back to the top to show the error
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Re-enable scrolling
+        document.body.style.overflow = '';
       }
     });
+  }
+
+  // For user view - approve package
+  confirmApprove(pkg: AdminPackage): void {
+    this.selectedPackage = pkg;
+    this.showApproveConfirm = true;
+    // Prevent background scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  cancelApprove(): void {
+    this.selectedPackage = null;
+    this.showApproveConfirm = false;
+    // Re-enable scrolling
+    document.body.style.overflow = '';
+  }
+
+  approvePackage(): void {
+    if (!this.selectedPackage || this.selectedPackage.packageId === undefined) {
+      return;
+    }
+    
+    this.approveInProgress = true;
+    const packageId = this.selectedPackage.packageId;
+    
+    // Call your service method to approve the package
+    // For now, we'll just simulate a successful approval
+    setTimeout(() => {
+      this.approveInProgress = false;
+      this.showApproveConfirm = false;
+      this.selectedPackage = null;
+      // You would typically show a success message here
+      document.body.style.overflow = '';
+    }, 1000);
+    
+    // When you have the actual service method, use this:
+    /*
+    this.packageService.approvePackage(packageId).subscribe({
+      next: () => {
+        this.approveInProgress = false;
+        this.showApproveConfirm = false;
+        this.selectedPackage = null;
+        document.body.style.overflow = '';
+      },
+      error: (error) => {
+        console.error('Error approving package:', error);
+        this.errorMessage = 'Failed to approve the package. Please try again.';
+        this.approveInProgress = false;
+        this.showApproveConfirm = false;
+        document.body.style.overflow = '';
+      }
+    });
+    */
   }
 }

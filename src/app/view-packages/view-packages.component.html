@@ -1,3 +1,4 @@
+<!-- view-packages.component.html -->
 <div class="view-packages-container">
     <div class="card">
       <div class="card-header">
@@ -23,7 +24,7 @@
         
         <!-- No packages message -->
         <div *ngIf="!isLoading && packages.length === 0 && !errorMessage" class="no-data">
-          <p>No packages found. Create a new package to get started.</p>
+          <p>No packages found.</p>
         </div>
         
         <!-- Packages table -->
@@ -47,8 +48,14 @@
                 <td>{{ pkg.description || 'N/A' }}</td>
                 <td>{{ pkg.testType || 'N/A' }}</td>
                 <td>
-                  <button class="btn btn-outline-danger delete-btn" (click)="confirmDelete(pkg)">
+                  <!-- Show Delete button for admin view -->
+                  <button *ngIf="!userView" class="btn btn-outline-danger delete-btn" (click)="confirmDelete(pkg)">
                     <i class="fa fa-trash"></i> Delete
+                  </button>
+                  
+                  <!-- Show Approve button for user view -->
+                  <button *ngIf="userView" class="btn btn-outline-success approve-btn" (click)="confirmApprove(pkg)">
+                    <i class="fa fa-check"></i> Approve
                   </button>
                 </td>
               </tr>
@@ -80,3 +87,97 @@
       </div>
     </div>
   </div>
+  
+  <!-- Approve Confirmation Popup -->
+  <div *ngIf="showApproveConfirm" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Confirm Selection</h2>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to select the "{{ selectedPackage?.packageName }}" package?</p>
+          <p>Price: ${{ selectedPackage?.packagePrice | number:'1.2-2' }}</p>
+          <p>Test Type: {{ selectedPackage?.testType }}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelApprove()">Cancel</button>
+          <button class="btn btn-success" (click)="approvePackage()" [disabled]="approveInProgress">
+            <span *ngIf="approveInProgress" class="spinner-border spinner-border-sm me-2"></span>
+            Approve
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add CSS for the modal overlay and approve button -->
+  <style>
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+  
+  .modal-dialog {
+    width: 100%;
+    max-width: 500px;
+    margin: 1.75rem auto;
+  }
+  
+  .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    outline: 0;
+  }
+  
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    gap: 0.5rem;
+  }
+  
+  .approve-btn {
+    border-radius: 4px;
+    color: #28a745;
+    border-color: #28a745;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .approve-btn:hover {
+    color: #fff;
+    background-color: #28a745;
+  }
+  </style>

@@ -1,0 +1,67 @@
+<div class="user-list-container">
+    <div class="user-list-header">
+      <h2>User Management</h2>
+      <button class="refresh-btn" (click)="refreshUsers()">
+        <span class="icon">↻</span> Refresh
+      </button>
+    </div>
+  
+    <div class="filters">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          placeholder="Search by name or email" 
+          (keyup.enter)="onSearch()"
+        >
+        <button (click)="onSearch()">Search</button>
+      </div>
+      
+      <div class="role-filter">
+        <label>Filter by Role:</label>
+        <select [(ngModel)]="roleFilter" (change)="applyFilters()">
+          <option value="all">All Users</option>
+          <option value="doctor">Doctors</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading">
+      Loading users...
+    </div>
+  
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="!isLoading && !error" class="users-grid">
+      <div *ngIf="filteredUsers.length === 0" class="no-users">
+        No users found with the current filters.
+      </div>
+  
+      <table *ngIf="filteredUsers.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [ngClass]="user.role.toLowerCase()">
+                {{ user.role }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

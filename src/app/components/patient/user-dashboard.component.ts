@@ -20,19 +20,10 @@ import { ViewPackagesComponent } from "../../view-packages/view-packages.compone
       </div>
       
       <div class="dashboard-content">
-        <div class="dashboard-card quick-actions">
+        <div class="dashboard-card quick-actions" *ngIf="!showPackages">
           <h2>Quick Actions</h2>
           <div class="action-buttons">
-            <!-- <button class="action-button" routerLink="/get/all/appointment">
-              <div class="icon-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                  <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
-                </svg>
-              </div>
-              <span>Book Appointment</span>
-            </button> -->
-            
-            <button class="action-button">
+            <button class="action-button" (click)="togglePackagesView()">
               <div class="icon-container">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                   <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
@@ -61,7 +52,17 @@ import { ViewPackagesComponent } from "../../view-packages/view-packages.compone
             </button>
           </div>
         </div>
-        <div class="dashboard-section">
+
+        <!-- Show packages view when showPackages is true -->
+        <div *ngIf="showPackages">
+          <div class="package-header">
+            <h2>Available Packages</h2>
+            <button class="back-btn" (click)="togglePackagesView()">Back to Dashboard</button>
+          </div>
+          <app-view-packages [userView]="true"></app-view-packages>
+        </div>
+        
+        <div class="dashboard-section" *ngIf="!showPackages">
           <!-- Include the Doctor List Component -->
            <app-doctor-list></app-doctor-list>
         </div>
@@ -167,6 +168,34 @@ import { ViewPackagesComponent } from "../../view-packages/view-packages.compone
     .dashboard-section {
       margin-top: 20px;
     }
+
+    .package-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .package-header h2 {
+      color: #0d2437;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .back-btn {
+      padding: 8px 16px;
+      background-color: #4db6ac;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+      background-color: #3d9d92;
+    }
     
     @media (max-width: 768px) {
       .dashboard-header {
@@ -182,10 +211,18 @@ import { ViewPackagesComponent } from "../../view-packages/view-packages.compone
       .action-buttons {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .package-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
     }
   `]
 })
 export class UserDashboardComponent {
+  showPackages = false;
+
   constructor(
     private authService: AuthService,
     private router: Router
@@ -194,5 +231,9 @@ export class UserDashboardComponent {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  togglePackagesView(): void {
+    this.showPackages = !this.showPackages;
   }
 }
