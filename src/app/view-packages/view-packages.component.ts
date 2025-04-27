@@ -12,7 +12,7 @@ import { AdminPackage } from '../models/admin.model';
   styleUrls: ['./view-packages.component.scss']
 })
 export class ViewPackagesComponent implements OnInit {
-  @Input() userView: boolean = false; // Flag to determine if this is user view
+  @Input() userView: boolean = false;
 
   packages: AdminPackage[] = [];
   isLoading = false;
@@ -27,7 +27,6 @@ export class ViewPackagesComponent implements OnInit {
   constructor(private packageService: AdminPackageService) {}
   private bookedPackageIds: number[] = [];
   ngOnInit(): void {
-    // Load booked packages from localStorage
     this.loadBookedPackages();
     this.loadPackages();
   }
@@ -58,14 +57,12 @@ export class ViewPackagesComponent implements OnInit {
   confirmDelete(pkg: AdminPackage): void {
     this.packageToDelete = pkg;
     this.showDeleteConfirm = true;
-    // Prevent background scrolling when modal is open
     document.body.style.overflow = 'hidden';
   }
 
   cancelDelete(): void {
     this.packageToDelete = null;
     this.showDeleteConfirm = false;
-    // Re-enable scrolling
     document.body.style.overflow = '';
   }
 
@@ -79,12 +76,10 @@ export class ViewPackagesComponent implements OnInit {
     
     this.packageService.deletePackage(packageId).subscribe({
       next: () => {
-        // Remove the package from the array
         this.packages = this.packages.filter(p => p.packageId !== packageId);
         this.showDeleteConfirm = false;
         this.packageToDelete = null;
         this.deleteInProgress = false;
-        // Re-enable scrolling
         document.body.style.overflow = '';
       },
       error: (error) => {
@@ -149,7 +144,6 @@ export class ViewPackagesComponent implements OnInit {
     if (!this.bookedPackageIds.includes(packageId)) {
       this.bookedPackageIds.push(packageId);
       localStorage.setItem('bookedPackages', JSON.stringify(this.bookedPackageIds));
-      console.log('Updated booked packages:', this.bookedPackageIds);
     }
   }
 
