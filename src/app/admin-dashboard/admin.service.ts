@@ -39,6 +39,18 @@ export class AdminPackageService {
 
   approvePackage(packageId: number): Observable<ApiResponse> {
     const params = new HttpParams().set('packageId', packageId.toString());
-    return this.http.put<ApiResponse>(`${this.baseUrl}/package/approve`, {}, { params });
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.put<ApiResponse>(
+      `${this.baseUrl}/package/approve`, 
+      {}, 
+      { 
+        params: params,
+        headers: headers 
+      }
+    );
   }
 }

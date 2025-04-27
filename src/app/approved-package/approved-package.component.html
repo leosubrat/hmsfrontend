@@ -37,6 +37,9 @@
                 <th>Price</th>
                 <th>Description</th>
                 <th>Test Type</th>
+                <th>FirstName</th>
+                <th>lastName</th>
+                <th>phoneNumber</th>
               </tr>
             </thead>
             <tbody>
@@ -46,6 +49,9 @@
                 <td>Rs. {{ pkg.packagePrice | number:'1.2-2' }}</td>
                 <td>{{ pkg.description || 'N/A' }}</td>
                 <td>{{ pkg.testType || 'N/A' }}</td>
+                <td>{{pkg.firstName ||'N/A'}}</td>
+                <td>{{pkg.lastName||'N/A'}}</td>
+                <td>{{pkg.phoneNumber}}</td>
               </tr>
             </tbody>
           </table>

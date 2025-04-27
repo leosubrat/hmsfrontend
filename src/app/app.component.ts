@@ -62,7 +62,8 @@ export class AppComponent implements OnInit {
       '/admin/dashboard',
       '/create/package',
       '/view/package',
-      '/view/users'
+      '/view/users',
+      '/package/approved'
     ];
     
     // Check if the current URL matches any of these routes
