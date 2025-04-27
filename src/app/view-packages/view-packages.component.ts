@@ -25,11 +25,19 @@ export class ViewPackagesComponent implements OnInit {
   approveInProgress = false;
 
   constructor(private packageService: AdminPackageService) {}
-
+  private bookedPackageIds: number[] = [];
   ngOnInit(): void {
+    // Load booked packages from localStorage
+    this.loadBookedPackages();
     this.loadPackages();
   }
-
+  private loadBookedPackages(): void {
+    const storedPackages = localStorage.getItem('bookedPackages');
+    if (storedPackages) {
+      this.bookedPackageIds = JSON.parse(storedPackages);
+      console.log('Loaded booked packages:', this.bookedPackageIds);
+    }
+  }
   loadPackages(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -84,24 +92,20 @@ export class ViewPackagesComponent implements OnInit {
         this.errorMessage = 'Failed to delete the package. Please try again.';
         this.deleteInProgress = false;
         this.showDeleteConfirm = false;
-        // Re-enable scrolling
         document.body.style.overflow = '';
       }
     });
   }
 
-  // For user view - approve package
   confirmApprove(pkg: AdminPackage): void {
     this.selectedPackage = pkg;
     this.showApproveConfirm = true;
-    // Prevent background scrolling when modal is open
     document.body.style.overflow = 'hidden';
   }
 
   cancelApprove(): void {
     this.selectedPackage = null;
     this.showApproveConfirm = false;
-    // Re-enable scrolling
     document.body.style.overflow = '';
   }
 
@@ -111,19 +115,21 @@ export class ViewPackagesComponent implements OnInit {
       return;
     }
     
+    const packageId = this.selectedPackage.packageId;
     this.approveInProgress = true;
     
-    this.packageService.approvePackage(this.selectedPackage.packageId).subscribe(
+    this.packageService.approvePackage(packageId).subscribe(
       (response) => {
         console.log('Package approved successfully:', response);
+        
+        this.addToBookedPackages(packageId);
+        
         this.cancelApprove();
         this.approveInProgress = false;
+        
         this.loadPackages();
         
-        // Show success toast message
         this.showSuccessToast('Package booked successfully!');
-        
-   
       },
       (error) => {
         console.error('Error approving package:', error);
@@ -134,20 +140,27 @@ export class ViewPackagesComponent implements OnInit {
     );
   }
 
-  private bookedPackageIds: number[] = [];
 
-addToBookedPackages(packageId: number): void {
-  if (!this.bookedPackageIds.includes(packageId)) {
-    this.bookedPackageIds.push(packageId);
+  addToBookedPackages(packageId: number | undefined): void {
+    if (packageId === undefined) {
+      return;
+    }
+    
+    if (!this.bookedPackageIds.includes(packageId)) {
+      this.bookedPackageIds.push(packageId);
+      localStorage.setItem('bookedPackages', JSON.stringify(this.bookedPackageIds));
+      console.log('Updated booked packages:', this.bookedPackageIds);
+    }
   }
-}
 
-isPackageBooked(packageId: number): boolean {
-  return this.bookedPackageIds.includes(packageId);
-}
+  isPackageBooked(packageId: number | undefined): boolean {
+    if (packageId === undefined) {
+      return false;
+    }
+    return this.bookedPackageIds.includes(packageId);
+  }
 
 showSuccessToast(message: string): void {
-  // Create toast container if it doesn't exist
   let toastContainer = document.getElementById('toast-container');
   if (!toastContainer) {
     toastContainer = document.createElement('div');
@@ -187,10 +200,8 @@ showSuccessToast(message: string): void {
     document.head.appendChild(style);
   }
   
-  // Add toast to container
   toastContainer.appendChild(toast);
   
-  // Remove toast after 3 seconds
   setTimeout(() => {
     toast.style.animation = 'fadeOut 0.3s ease-out';
     setTimeout(() => {

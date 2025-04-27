@@ -1,4 +1,3 @@
-<!-- view-packages.component.html -->
 <div class="view-packages-container">
     <div class="card">
       <div class="card-header">
@@ -10,13 +9,11 @@
         </button>
       </div>
       
-      <!-- Error message -->
       <div *ngIf="errorMessage" class="alert alert-danger m-3">
         {{ errorMessage }}
       </div>
       
       <div class="card-body">
-        <!-- Loading spinner -->
         <div *ngIf="isLoading" class="loading-container">
           <div class="spinner-border text-primary"></div>
           <p>Loading packages...</p>
@@ -48,15 +45,17 @@
                 <td>{{ pkg.description || 'N/A' }}</td>
                 <td>{{ pkg.testType || 'N/A' }}</td>
                 <td>
-                  <!-- Show Delete button for admin view -->
                   <button *ngIf="!userView" class="btn btn-outline-danger delete-btn" (click)="confirmDelete(pkg)">
                     <i class="fa fa-trash"></i> Delete
                   </button>
                   
-                  <!-- Show Approve button for user view -->
-                  <button *ngIf="userView" class="btn btn-outline-success approve-btn" (click)="confirmApprove(pkg)">
-                    <i class="fa fa-check"></i> Book
-                  </button>
+                  <button *ngIf="userView" 
+                  class="btn btn-outline-success approve-btn" 
+                  [disabled]="isPackageBooked(pkg.packageId)"
+                  [ngClass]="{'booked-package': isPackageBooked(pkg.packageId)}"
+                  (click)="!isPackageBooked(pkg.packageId) && confirmApprove(pkg)">
+                  <i class="fa fa-check"></i> {{ isPackageBooked(pkg.packageId) ? 'Booked' : 'Book' }}
+                </button>
                 </td>
               </tr>
             </tbody>
