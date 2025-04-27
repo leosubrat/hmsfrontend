@@ -119,6 +119,11 @@ export class ViewPackagesComponent implements OnInit {
         this.cancelApprove();
         this.approveInProgress = false;
         this.loadPackages();
+        
+        // Show success toast message
+        this.showSuccessToast('Package booked successfully!');
+        
+   
       },
       (error) => {
         console.error('Error approving package:', error);
@@ -128,4 +133,71 @@ export class ViewPackagesComponent implements OnInit {
       }
     );
   }
+
+  private bookedPackageIds: number[] = [];
+
+addToBookedPackages(packageId: number): void {
+  if (!this.bookedPackageIds.includes(packageId)) {
+    this.bookedPackageIds.push(packageId);
+  }
+}
+
+isPackageBooked(packageId: number): boolean {
+  return this.bookedPackageIds.includes(packageId);
+}
+
+showSuccessToast(message: string): void {
+  // Create toast container if it doesn't exist
+  let toastContainer = document.getElementById('toast-container');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toast-container';
+    toastContainer.style.position = 'fixed';
+    toastContainer.style.top = '20px';
+    toastContainer.style.right = '20px';
+    toastContainer.style.zIndex = '9999';
+    document.body.appendChild(toastContainer);
+  }
+  
+  // Create toast
+  const toast = document.createElement('div');
+  toast.style.backgroundColor = '#28a745';
+  toast.style.color = 'white';
+  toast.style.padding = '12px 24px';
+  toast.style.borderRadius = '4px';
+  toast.style.marginBottom = '10px';
+  toast.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+  toast.style.animation = 'fadeIn 0.3s ease-in';
+  toast.innerText = message;
+  
+  // Add keyframes for fadeIn animation
+  if (!document.getElementById('toast-animations')) {
+    const style = document.createElement('style');
+    style.id = 'toast-animations';
+    style.innerHTML = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Add toast to container
+  toastContainer.appendChild(toast);
+  
+  // Remove toast after 3 seconds
+  setTimeout(() => {
+    toast.style.animation = 'fadeOut 0.3s ease-out';
+    setTimeout(() => {
+      if (toastContainer.contains(toast)) {
+        toastContainer.removeChild(toast);
+      }
+    }, 300);
+  }, 3000);
+}
 }

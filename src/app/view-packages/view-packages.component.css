@@ -5,7 +5,38 @@
     margin: 0 auto;
     padding: 16px;
   }
-  
+  .toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    color: white;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: toast-fadein 0.3s ease-in;
+  }
+
+  .toast-success {
+    background-color: #28a745;
+  }
+
+  .toast-fadeout {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+
+  @keyframes toast-fadein {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .booked-package {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+    cursor: not-allowed !important;
+  }
   .card {
     background-color: white;
     border-radius: 8px;
