@@ -28,7 +28,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
         </div>
       </div>
     </div>
-    
+
     <nav class="sidebar-nav">
       <button class="nav-item active">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
@@ -36,14 +36,14 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
         </svg>
         <span>Dashboard</span>
       </button>
-      
+
       <button class="nav-item" (click)="navigateToAppointments()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
           <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/>
         </svg>
         <span>Appointments</span>
       </button>
-      
+
       <button class="nav-item logout" (click)="logout()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
           <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
@@ -52,7 +52,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       </button>
     </nav>
   </aside>
-  
+
   <main class="main-content">
     <header class="main-header">
       <h1>Doctor Dashboard</h1>
@@ -60,18 +60,18 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
         <app-doctor-notification [doctorId]="doctorDto.doctorId"></app-doctor-notification>
       </div>
     </header>
-    
+
     <div class="dashboard-grid">
       <div class="dashboard-card availability">
         <h2>My Availability</h2>
-        
+
         <!-- Date Picker Section -->
         <div class="date-picker-section">
           <div class="date-input-container">
             <label for="selected-date">Select Date:</label>
-            <input 
-              type="date" 
-              id="selected-date" 
+            <input
+              type="date"
+              id="selected-date"
               class="date-input"
               [(ngModel)]="selectedDate"
               [min]="getMinDate()"
@@ -82,7 +82,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
             Selected: {{ formatSelectedDate() }}
           </p>
         </div>
-        
+
         <!-- Time slots section -->
         <div class="time-slots">
           <div class="time-slot" *ngFor="let slot of currentDateSlots; let i = index">
@@ -101,58 +101,8 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
           </button>
         </div>
       </div>
-      
-      <div class="dashboard-card appointments">
-        <h2>Upcoming Appointments</h2>
-        
-        <div class="appointment-list">
-          <div class="appointment-item">
-            <div class="appointment-time">
-              <div class="time">09:00 AM</div>
-              <div class="date">Today</div>
-            </div>
-            <div class="appointment-details">
-              <div class="patient-name">John Smith</div>
-              <div class="appointment-type">General Checkup</div>
-            </div>
-            <div class="appointment-actions">
-              <button class="action-btn view">View</button>
-            </div>
-          </div>
-          
-          <div class="appointment-item">
-            <div class="appointment-time">
-              <div class="time">11:30 AM</div>
-              <div class="date">Today</div>
-            </div>
-            <div class="appointment-details">
-              <div class="patient-name">Sarah Johnson</div>
-              <div class="appointment-type">Follow-up</div>
-            </div>
-            <div class="appointment-actions">
-              <button class="action-btn view">View</button>
-            </div>
-          </div>
-          
-          <div class="appointment-item">
-            <div class="appointment-time">
-              <div class="time">02:15 PM</div>
-              <div class="date">Tomorrow</div>
-            </div>
-            <div class="appointment-details">
-              <div class="patient-name">Michael Brown</div>
-              <div class="appointment-type">Consultation</div>
-            </div>
-            <div class="appointment-actions">
-              <button class="action-btn view">View</button>
-            </div>
-          </div>
-        </div>
-        
-        <button class="view-all-btn" (click)="navigateToAppointments()">View All Appointments</button>
-      </div>
     </div>
-    
+
     <div class="action-footer">
       <button class="save-btn" (click)="saveChanges()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -171,7 +121,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       min-height: 100vh;
       background-color: #f5f8fa;
     }
-    
+
     /* Sidebar */
     .sidebar {
       width: 260px;
@@ -181,18 +131,18 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       flex-direction: column;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     }
-    
+
     .sidebar-header {
       padding: 20px;
       border-bottom: 1px solid #f0f0f0;
     }
-    
+
     .doctor-profile {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    
+
     .doctor-avatar {
       width: 50px;
       height: 50px;
@@ -207,26 +157,26 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       background-size: cover;
       background-position: center;
     }
-    
+
     .doctor-info h3 {
       margin: 0;
       font-size: 16px;
       color: #333;
     }
-    
+
     .doctor-info p {
       margin: 4px 0 0 0;
       font-size: 14px;
       color: #4db6ac;
     }
-    
+
     .sidebar-nav {
       flex: 1;
       display: flex;
       flex-direction: column;
       padding: 20px 0;
     }
-    
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -239,64 +189,64 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       text-align: left;
       transition: all 0.2s;
     }
-    
+
     .nav-item:hover {
       background-color: #f5f8fa;
       color: #01579b;
     }
-    
+
     .nav-item.active {
       background-color: #e3f2fd;
       color: #01579b;
       font-weight: 500;
     }
-    
+
     .nav-item svg {
       width: 20px;
       height: 20px;
       opacity: 0.8;
     }
-    
+
     .nav-item.active svg {
       opacity: 1;
     }
-    
+
     .nav-item.logout {
       margin-top: auto;
       border-top: 1px solid #f0f0f0;
       color: #e53935;
     }
-    
+
     .nav-item.logout:hover {
       background-color: #ffebee;
     }
-    
+
     /* Main Content */
     .main-content {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
     }
-    
+
     .main-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
     }
-    
+
     .main-header h1 {
       color: #333;
       font-size: 24px;
       margin: 0;
     }
-    
+
     .header-actions {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-    
+
     /* Dashboard Grid */
     .dashboard-grid {
       display: grid;
@@ -304,14 +254,14 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       gap: 20px;
       margin-bottom: 20px;
     }
-    
+
     .dashboard-card {
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       padding: 20px;
     }
-    
+
     .dashboard-card h2 {
       color: #333;
       font-size: 18px;
@@ -320,7 +270,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       padding-bottom: 12px;
       border-bottom: 1px solid #f0f0f0;
     }
-    
+
     /* Availability Card */
     .date-picker-section {
       margin-bottom: 16px;
@@ -329,19 +279,19 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       border-radius: 6px;
       border: 1px solid #e0e0e0;
     }
-    
+
     .date-input-container {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    
+
     .date-input-container label {
       font-weight: 500;
       color: #333;
       min-width: 100px;
     }
-    
+
     .date-input {
       flex: 1;
       padding: 10px;
@@ -350,33 +300,33 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       font-size: 14px;
       font-family: inherit;
     }
-    
+
     .selected-date-display {
       margin-top: 10px;
       font-size: 14px;
       color: #01579b;
       font-weight: 500;
     }
-    
+
     .time-slots {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    
+
     .time-slot {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    
+
     .time-range {
       display: flex;
       align-items: center;
       gap: 10px;
       flex: 1;
     }
-    
+
     .time-input {
       padding: 10px;
       border: 1px solid #e0e0e0;
@@ -384,7 +334,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       font-size: 14px;
       flex: 1;
     }
-    
+
     .remove-slot-btn {
       background: none;
       border: none;
@@ -393,7 +343,7 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       font-size: 18px;
       padding: 5px;
     }
-    
+
     .add-slot-btn {
       margin-top: 10px;
       padding: 10px;
@@ -409,18 +359,18 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       justify-content: center;
       gap: 8px;
     }
-    
+
     .add-slot-btn:hover {
       background-color: rgba(77, 182, 172, 0.1);
     }
-    
+
     /* Appointments Card */
     .appointment-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    
+
     .appointment-item {
       display: flex;
       align-items: center;
@@ -429,51 +379,51 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       background-color: #f9f9f9;
       transition: all 0.2s;
     }
-    
+
     .appointment-item:hover {
       background-color: #f0f0f0;
     }
-    
+
     .appointment-time {
       width: 100px;
       padding-right: 16px;
       border-right: 1px solid #e0e0e0;
     }
-    
+
     .time {
       font-weight: 600;
       color: #333;
       font-size: 14px;
     }
-    
+
     .date {
       color: #666;
       font-size: 12px;
       margin-top: 4px;
     }
-    
+
     .appointment-details {
       flex: 1;
       padding: 0 16px;
     }
-    
+
     .patient-name {
       font-weight: 500;
       color: #333;
       font-size: 14px;
     }
-    
+
     .appointment-type {
       color: #666;
       font-size: 12px;
       margin-top: 4px;
     }
-    
+
     .appointment-actions {
       display: flex;
       gap: 8px;
     }
-    
+
     .action-btn {
       padding: 8px 12px;
       border: none;
@@ -482,16 +432,16 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .action-btn.view {
       background-color: #e3f2fd;
       color: #1976d2;
     }
-    
+
     .action-btn.view:hover {
       background-color: #bbdefb;
     }
-    
+
     .view-all-btn {
       display: block;
       width: 100%;
@@ -505,18 +455,18 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .view-all-btn:hover {
       background-color: rgba(77, 182, 172, 0.1);
     }
-    
+
     /* Action Footer */
     .action-footer {
       display: flex;
       justify-content: flex-end;
       margin-top: 20px;
     }
-    
+
     .save-btn {
       display: flex;
       align-items: center;
@@ -531,53 +481,53 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    
+
     .save-btn:hover {
       background-color: #00897b;
     }
-    
+
     /* Responsive Styles */
     @media (max-width: 1200px) {
       .dashboard-grid {
         grid-template-columns: 1fr;
       }
     }
-    
+
     @media (max-width: 992px) {
       .dashboard-wrapper {
         flex-direction: column;
       }
-      
+
       .sidebar {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid #e0e0e0;
       }
-      
+
       .sidebar-nav {
         flex-direction: row;
         overflow-x: auto;
         padding: 10px;
       }
-      
+
       .nav-item {
         flex-direction: column;
         padding: 10px;
         gap: 5px;
       }
-      
+
       .nav-item.logout {
         margin-top: 0;
         border-top: none;
       }
-      
+
       .date-input-container {
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
       }
     }
-    
+
     .success-toast, .error-toast {
       position: fixed;
       bottom: 30px;
@@ -591,22 +541,22 @@ import { AppointmentListComponent } from "../../appointment-form/appointment-lis
       z-index: 1000;
       animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
     }
-    
+
     .error-toast {
       background-color: #f44336;
       color: white;
     }
-    
+
     .success-toast {
       background-color: #4caf50;
       color: white;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     @keyframes fadeOut {
       from { opacity: 1; transform: translateY(0); }
       to { opacity: 0; transform: translateY(-20px); }
@@ -621,7 +571,7 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
   // Selected date and its time slots
   selectedDate: string = '';
   currentDateSlots: Array<{ startTime: string, endTime: string }> = [];
-  
+
   // Store availability for different dates (key: date in YYYY-MM-DD format, value: time slots)
   datesAvailability: { [date: string]: Array<{ startTime: string, endTime: string }> } = {};
 
@@ -631,40 +581,40 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     lastName: '',
     expertise: ''
   };
-  
+
   constructor(
     private doctorService: DoctorService,
     private authService: AuthService,
     private router: Router,
     private notificationService: DoctorNotificationService
   ) {}
-  
+
   ngOnInit(): void {
     this.loadDoctorProfile();
-    
+
     // Initialize selected date as today's date
     const today = new Date();
     this.selectedDate = this.formatDateForInput(today);
     this.onDateChange();
   }
-  
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  
+
   navigateToAppointments(): void {
     this.router.navigate(['/get/all/appointment']);
   }
-  
+
   getInitials(): string {
     if (!this.doctorInfo) return '';
-    
+
     const firstName = this.doctorInfo.firstName || '';
     const lastName = this.doctorInfo.lastName || '';
-    
+
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
   }
-  
+
   // Format date for date input (YYYY-MM-DD)
   formatDateForInput(date: Date): string {
     const year = date.getFullYear();
@@ -672,29 +622,29 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-  
+
   // Get minimum date for date picker (today)
   getMinDate(): string {
     return this.formatDateForInput(new Date());
   }
-  
+
   // Format selected date for display
   formatSelectedDate(): string {
     if (!this.selectedDate) return '';
-    
+
     const date = new Date(this.selectedDate);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   }
-  
+
   // Handle date change
   onDateChange(): void {
     if (!this.selectedDate) return;
-    
+
     // Check if we already have slots for this date
     if (!this.datesAvailability[this.selectedDate]) {
       // Initialize with default slot
@@ -702,16 +652,16 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
         { startTime: '09:00', endTime: '17:00' }
       ];
     }
-    
+
     // Update current date slots reference
     this.currentDateSlots = this.datesAvailability[this.selectedDate];
   }
-  
+
   loadDoctorProfile(): void {
     this.doctorService.getDoctorProfile().subscribe({
       next: (data) => {
         this.doctorInfo = data;
-        
+
         // Set the doctorDto values from the profile data
         this.doctorDto = {
           doctorId: data.doctorId || 0,
@@ -719,17 +669,17 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
           lastName: data.lastName || '',
           expertise: data.expertise || ''
         };
-        
+
         // Load dates availability if there is any
         if (data.datesAvailability) {
           this.datesAvailability = data.datesAvailability;
-          
+
           // Initialize current date slots if there's a selected date
           if (this.selectedDate && this.datesAvailability[this.selectedDate]) {
             this.currentDateSlots = this.datesAvailability[this.selectedDate];
           }
         }
-        
+
         // Load notifications after profile is loaded
         if (this.doctorDto.doctorId > 0) {
           this.loadNotifications();
@@ -740,26 +690,26 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   loadNotifications(): void {
     if (this.doctorDto.doctorId <= 0) return;
-    
+
     this.notificationService.getUnreadNotificationCount(this.doctorDto.doctorId).subscribe({
       error: (error) => {
         console.error('Error fetching notification count:', error);
       }
     });
   }
-  
+
   addTimeSlot(): void {
     const newSlot = { startTime: '09:00', endTime: '17:00' };
     this.currentDateSlots.push(newSlot);
   }
-  
+
   removeTimeSlot(index: number): void {
     this.currentDateSlots.splice(index, 1);
   }
-  
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
@@ -770,7 +720,7 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
       selectedDate: this.selectedDate,
       timeSlots: this.currentDateSlots
     };
-  
+
     this.doctorService.updateDoctorProfile(doctorData).subscribe({
       next: (response) => {
         // Check if the response has the expected structure
@@ -784,16 +734,16 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
           // Fallback if the response structure is unexpected
           this.showToast('Profile updated successfully', 'success');
         }
-        
+
         // Handle the data from the response
         const updatedData = response.data || response;
-        
+
         // Update local data if there are time slots returned
         if (updatedData.timeSlots && this.selectedDate) {
           this.datesAvailability[this.selectedDate] = updatedData.timeSlots;
           this.currentDateSlots = [...this.datesAvailability[this.selectedDate]];
         }
-        
+
         // Debug log to check what's being received
         console.log('Update response:', response);
       },
@@ -803,13 +753,13 @@ export class DoctorDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   // Replace your showToast method with this one
 private showToast(message: string, type: 'success' | 'error'): void {
   // Remove any existing toasts
   const existingToasts = document.querySelectorAll('.toast-container');
   existingToasts.forEach(toast => toast.remove());
-  
+
   // Create container
   const toastContainer = document.createElement('div');
   toastContainer.className = 'toast-container';
@@ -817,7 +767,7 @@ private showToast(message: string, type: 'success' | 'error'): void {
   toastContainer.style.bottom = '30px';
   toastContainer.style.right = '30px';
   toastContainer.style.zIndex = '9999';
-  
+
   // Create toast element with inline styles (to avoid CSS issues)
   const toast = document.createElement('div');
   toast.textContent = message;
@@ -829,10 +779,10 @@ private showToast(message: string, type: 'success' | 'error'): void {
   toast.style.display = 'flex';
   toast.style.alignItems = 'center';
   toast.style.minWidth = '200px';
-  
+
   toastContainer.appendChild(toast);
     document.body.appendChild(toastContainer);
-  
+
   console.log(`Showing ${type} toast with message: ${message}`);
     setTimeout(() => {
     if (document.body.contains(toastContainer)) {
@@ -840,5 +790,5 @@ private showToast(message: string, type: 'success' | 'error'): void {
     }
   }, 3000);
 }
-  
+
 }
